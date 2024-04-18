@@ -1,20 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import TabNavigator from "./src/routers/TabNavigator";
+import SplashScreenView from "./src/screens/SplashScreen/SplashScreenView";
+import { useEffect, useState } from "react";
+import { View } from 'react-native'
+import style from "./src/screens/SplashScreen/style";
 
-export default function App() {
+const Tab = createBottomTabNavigator();
+function App() {
+  const [isShowSplashScreen, setIsShowSplashScreen] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsShowSplashScreen(false);
+    }, 3000);
+  });
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      {isShowSplashScreen ? <SplashScreenView /> : <TabNavigator />}
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
