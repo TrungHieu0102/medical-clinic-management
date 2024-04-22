@@ -6,8 +6,6 @@ import DashboardNavigator from "./navigators/DashboardNavigator";
 import DetailsNavigator from "./navigators/DetailsNavigator";
 import AboutNavigator from "./navigators/AboutNavigator";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Login from "../components/Abouts/Login";
-import Signup from "../components/Abouts/Signup";
 
 const TabNavigator = () => {
   const Tabs = createBottomTabNavigator();
@@ -20,13 +18,13 @@ const TabNavigator = () => {
           tabBarShowLabel: false,
           tabBarIcon: ({ focused, color, size }) => {
             if (route.name === "DashboardStack") {
-              return <Home size={size} color={focused ? "coral" : "#676767"} />;
+              return <Home size={size} color={focused ? "#3d85c6" : "#676767"} />;
             }
             else if (route.name === "DetailsStack") {
-              return <More size={size} color={focused ? "coral" : "#676767"} />;
+              return <More size={size} color={focused ? "#3d85c6" : "#676767"} />;
             }
             else if(route.name=="AboutStack"){
-              return <User size={size} color={focused ? "coral" : "#676767"}/>
+              return <User size={size} color={focused ? "#3d85c6" : "#676767"}/>
             }
           },
         })}

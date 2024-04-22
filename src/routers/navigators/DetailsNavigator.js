@@ -6,7 +6,7 @@ import Details from '../../components/Details/Details'
 const DetailsNavigator = ({navigation}) => {
 const DetailStack = createNativeStackNavigator()
   return (
-   <DetailStack.Navigator>
+   <DetailStack.Navigator  screenOptions={{headerShown: true}}>
     <DetailStack.Screen name="Details" component = { Details} />
    </DetailStack.Navigator>
   )
