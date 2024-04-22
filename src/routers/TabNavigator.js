@@ -5,9 +5,13 @@ import { Home,More,User } from "iconsax-react-native";
 import DashboardNavigator from "./navigators/DashboardNavigator";
 import DetailsNavigator from "./navigators/DetailsNavigator";
 import AboutNavigator from "./navigators/AboutNavigator";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Login from "../components/Abouts/Login";
+import Signup from "../components/Abouts/Signup";
 
 const TabNavigator = () => {
   const Tabs = createBottomTabNavigator();
+  const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
       <Tabs.Navigator
@@ -31,6 +35,10 @@ const TabNavigator = () => {
         <Tabs.Screen name="DetailsStack" component={DetailsNavigator} options={{headerTitle:"Detail"}} />
         <Tabs.Screen name="AboutStack" component={AboutNavigator} options={{headerTitle:"About"}} />
       </Tabs.Navigator>
+   
+     
+      
+  
     </NavigationContainer>
   );
 };

@@ -2,9 +2,56 @@ import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
-import { useNavigation } from "@react-navigation/native";
+import Apis, { authApi, endpoints } from "../../Apis";
+import { append } from "domutils";
 
+const {width} = Dimensions.get('window');
+
+const [user, setUser] = useState({
+  first_name: "",
+  last_name: "",
+  username: "",
+  password: "",
+  avatar: "",
+});
+const [loading, setLoading] = useState();
+const register = async () => {
+  setLoading(true);
+  try {
+    let form = new FormData();
+    for (key in user) {
+      if (key === "avatar") {
+        form.append(key, {
+          uri: user[key].uri,
+          name: user[key].fileName,
+          type: user[key].type,
+        });
+      } else form.append(key, user[key]);
+    }
+    const res = await Apis.post(endpoints["register"], form, {
+      headers: {
+        "Content-Type": "multipart/formdata",
+      },
+    });
+
+    console.info(res.data);
+
+    navigation.navigate("Login");
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+const change = (field, value) => {
+  setUser((current) => {
+    return { ...current, [field]: value };
+  });
+};
 export default function Signup({navigation}) {
+  
+
   return (
     <View className="bg-white h-full w-full">
       <StatusBar style="light" />
@@ -26,7 +73,7 @@ export default function Signup({navigation}) {
 
       {/*title and form*/}
 
-      <View className="h-full w-full flex justify-around pt-40 pb-10">
+      <View className="h-full w-full flex justify-around pt-48">
         {/*title*/}
         <View className="flex items-center mb-60">
           <Animated.Text
@@ -42,7 +89,7 @@ export default function Signup({navigation}) {
             entering={FadeInDown.duration(1000).springify()}
             className="bg-black/5 p-5 rounded-2xl w-full"
           >
-            <TextInput placeholder="Username" placeholderTextColor={"gray"} />
+            <TextInput value={user.username} onChangeText={t=>change('username',t)}  placeholder="Username" placeholderTextColor={"gray"} />
           </Animated.View>
           <Animated.View
             entering={FadeInDown.delay(200).duration(1000).springify()}
@@ -54,16 +101,18 @@ export default function Signup({navigation}) {
             entering={FadeInDown.delay(400).duration(1000).springify()}
             className="bg-black/5 p-5 rounded-2xl w-full mb-3"
           >
-            <TextInput
+            <TextInput value={user.password} onChangeText={t=>change('password',t)} 
               placeholder="Mật khẩu"
               placeholderTextColor={"gray"}
               secureTextEntry
             />
           </Animated.View>
+          
           <Animated.View
             entering={FadeInDown.duration(1000).delay(600).springify()}
             className="w-full"
           >
+             
             <TouchableOpacity className="w-full bg-sky-400 p-3 rounded-2xl mb-3">
               <Text className="text-xl font-bold text-white text-center">
                 {" "}

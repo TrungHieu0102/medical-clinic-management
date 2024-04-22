@@ -2,10 +2,11 @@ import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
-import Signup from "./Signup";
-import { useNavigation } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as ImagePicker from "expo-image-picker";
 
-export default function Login({navigation}){
+export default function Login({ navigation }) {
+  
   return (
     <View className="bg-white h-full w-full">
       <StatusBar style="light" />
@@ -13,19 +14,6 @@ export default function Login({navigation}){
         className="h-full w-full absolute "
         source={require("../../assets/backgroundLogin.png")}
       />
-      {/*light*/}
-      {/* <View className="flex-row justify-around w-full absolute">
-        <Image
-          className="h-[125] w-[50]"
-          source={require("../../assets/ic_app.png")}
-        />
-        <Image
-          className="h-[160] w-[65]"
-          source={require("../../assets/ic_app.png")}
-        />
-      </View> */}
-
-      {/*title and form*/}
 
       <View className="h-full w-full flex justify-around pt-40 pb-10">
         {/*title*/}
@@ -71,9 +59,7 @@ export default function Login({navigation}){
             className="flex-row justify-center"
           >
             <Text>Bạn chưa có tài khoản ? </Text>
-            <TouchableOpacity onPress={()=>navigation.navigate('Signup')
-
-            } >
+            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
               <Text className="text-sky-600">Đăng ký</Text>
             </TouchableOpacity>
           </Animated.View>
@@ -82,4 +68,3 @@ export default function Login({navigation}){
     </View>
   );
 }
-
