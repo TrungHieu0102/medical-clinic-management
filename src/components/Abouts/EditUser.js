@@ -1,208 +1,286 @@
-import React, { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  ImageBackground,
+  ScrollView,
+  Image,
   TextInput,
+  Modal,
   StyleSheet,
 } from "react-native";
-import { useTheme } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import Feather from "react-native-vector-icons/Feather";
-import Animated from "react-native-reanimated";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-import BottomSheet from "react-native-reanimated-bottomsheet";  
-const EditUser = () => {
-  const [image, setImage] = useState(
-    "https://images2.thanhnien.vn/528068263637045248/2023/6/18/6-16870495312901061133770.jpg"
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import * as ImagePicker from "expo-image-picker";
+import { MaterialIcons } from "@expo/vector-icons";
+import { imagesDataURL } from "../../assets/constants/data";
+import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
+import styles from "./styles";
+const EditUser = ({ navigation }) => {
+  const [selectedImage, setSelectedImage] = useState(imagesDataURL[0]);
+  const [name, setName] = useState("Trung Hieu");
+  const [email, setEmail] = useState("trunghieu@gmail.com");
+  const [password, setPassword] = useState("randompassword");
+  const [country, setCountry] = useState("VietNam");
+  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
+  const today = new Date();
+  const startDate = getFormatedDate(
+    today.setDate(today.getDate() + 1),
+    "YYYY/MM/DD"
   );
-  const { colors } = useTheme();
-  const renderInner = () => (
-    <View style={styles.panel}>
-      <View style={{ alignItems: "center" }}>
-        <Text style={styles.panelTitle}>Upload Photo</Text>
-        <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
-      </View>
-      <TouchableOpacity style={styles.panelButton} onPress={() => {}}>
-        <Text style={styles.panelButtonTitle}>Take Photo</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.panelButton} onPress={() => {}}>
-        <Text style={styles.panelButtonTitle}>Choose From Library</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.panelButton}
-        onPress={() => bs.current.snapTo(1)} // Access ref correctly
+  const [selectedStartDate, setSelectedStartDate] = useState("01/01/1990");
+  const [startedDate, setStartedDate] = useState("12/12/2023");
+
+  const handleChangeStartDate = (propDate) => {
+    setStartedDate(propDate);
+  };
+
+  const handleOnPressStartDate = () => {
+    setOpenStartDatePicker(!openStartDatePicker);
+  };
+
+  const handleImageSelection = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri);
+    }
+  };
+  function renderDatePicker() {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={openStartDatePicker}
       >
-        <Text style={styles.panelButtonTitle}>Cancel</Text>
-      </TouchableOpacity>
-    </View>
-  );
-  const renderHeader = () => ( // Declare functions with const
-    <View style={styles.header}>
-      <View style={styles.panelHeader}>
-        <View style={styles.panelHandle} />
-      </View>
-    </View>
-  );
-  const bs = React.createRef(); // Access ref correctly
-  const fall = new Animated.Value(1); // Declare variable with const
+        <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+            <DatePicker
+              mode="calendar"
+              selected={startedDate}
+              onDateChanged={handleChangeStartDate}
+              onSelectedChange={(date) => setSelectedStartDate(date)}
+              options={{
+                backgroundColor: "#3d85c6",
+                textHeaderColor: "#FFFFFF",
+                textDefaultColor: "#FFFFFF",
+                selectedTextColor: "#3d85c6",
+                mainColor: "#FFFFFF",
+                textSecondaryColor: "#FFFFFF",
+                borderColor: "rgba(122, 146, 165, 0.1)",
+              }}
+            />
+
+            <TouchableOpacity onPress={handleOnPressStartDate}>
+              <Text style={{ color: "white" }}>Lưu</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
   return (
-    <View style={styles.container}>
-      <BottomSheet
-        ref={bs}
-        snapPoints={[330, 0]}
-        renderContent={renderInner}
-        renderHeader={renderHeader}
-        initialSnap={1}
-        callbackNode={fall}
-        enabledGestureInteraction={true}
-      />
-      <Animated.View
+    <SafeAreaView
+      style={{
+        flex: 1,
+
+        paddingHorizontal: 22,
+      }}
+    >
+      <View
         style={{
-          margin: 20,
-          opacity: Animated.add(0.1, Animated.multiply(fall, 1.0)),
+          marginHorizontal: 12,
+          flexDirection: "row",
+          justifyContent: "center",
         }}
-      >
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity onPress={() => this.bs.current.snapTo(0)}>
+      ></View>
+      <ScrollView>
+        <View
+          style={{
+            alignItems: "center",
+            marginVertical: 22,
+          }}
+        >
+          <TouchableOpacity onPress={handleImageSelection}>
+            <Image
+              source={{ uri: selectedImage }}
+              style={{
+                height: 170,
+                width: 170,
+                borderRadius: 85,
+                borderWidth: 2,
+              }}
+            />
+
             <View
               style={{
-                height: 100,
-                width: 100,
-                borderRadius: 15,
-                justifyContent: "center",
-                alignItems: "center",
+                position: "absolute",
+                bottom: 0,
+                right: 10,
+                zIndex: 9999,
               }}
             >
-              <ImageBackground
-                source={{
-                  uri: image,
-                }}
-                style={{ height: 100, width: 100 }}
-                imageStyle={{ borderRadius: 15 }}
-              >
-                <View
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Icon
-                    name="camera"
-                    size={35}
-                    color="#fff"
-                    style={{
-                      opacity: 0.7,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      borderWidth: 1,
-                      borderColor: "#fff",
-                      borderRadius: 10,
-                    }}
-                  />
-                </View>
-              </ImageBackground>
+              <MaterialIcons name="photo-camera" size={32} />
             </View>
           </TouchableOpacity>
-          <Text style={{ marginTop: 10, fontSize: 18, fontWeight: "bold" }}>
-            John Doe
-          </Text>
         </View>
 
-        <View style={styles.action}>
-          <FontAwesome name="user-o" color={colors.text} size={20} />
-          <TextInput
-            placeholder="First Name"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
+        <View>
+          <View
+            style={{
+              flexDirection: "column",
+              marginBottom: 6,
+            }}
+          >
+            <Text>Họ và tên</Text>
+            <View
+              style={{
+                height: 44,
+                width: "100%",
+
+                borderWidth: 1,
+                borderRadius: 4,
+                marginVertical: 6,
+                justifyContent: "center",
+                paddingLeft: 8,
+              }}
+            >
+              <TextInput
+                value={name}
+                onChangeText={(value) => setName(value)}
+                editable={true}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "column",
+              marginBottom: 6,
+            }}
+          >
+            <Text>Email</Text>
+            <View
+              style={{
+                height: 44,
+                width: "100%",
+                borderWidth: 1,
+                borderRadius: 4,
+                marginVertical: 6,
+                justifyContent: "center",
+                paddingLeft: 8,
+              }}
+            >
+              <TextInput
+                value={email}
+                onChangeText={(value) => setEmail(value)}
+                editable={true}
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "column",
+              marginBottom: 6,
+            }}
+          >
+            <Text>Mật khẩu</Text>
+            <View
+              style={{
+                height: 44,
+                width: "100%",
+
+                borderWidth: 1,
+                borderRadius: 4,
+                marginVertical: 6,
+                justifyContent: "center",
+                paddingLeft: 8,
+              }}
+            >
+              <TextInput
+                value={password}
+                onChangeText={(value) => setPassword(value)}
+                editable={true}
+                secureTextEntry
+              />
+            </View>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "column",
+              marginBottom: 6,
+            }}
+          >
+            <Text>Ngày sinh</Text>
+            <TouchableOpacity
+              onPress={handleOnPressStartDate}
+              style={{
+                height: 44,
+                width: "100%",
+                borderWidth: 1,
+                borderRadius: 4,
+                marginVertical: 6,
+                justifyContent: "center",
+                paddingLeft: 8,
+              }}
+            >
+              <Text>{selectedStartDate}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.action}>
-          <FontAwesome name="user-o" color={colors.text} size={20} />
-          <TextInput
-            placeholder="Last Name"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
+
+        <View
+          style={{
+            flexDirection: "column",
+            marginBottom: 6,
+          }}
+        >
+          <Text>Quê quán</Text>
+          <View
+            style={{
+              height: 44,
+              width: "100%",
+
+              borderWidth: 1,
+              borderRadius: 4,
+              marginVertical: 6,
+              justifyContent: "center",
+              paddingLeft: 8,
+            }}
+          >
+            <TextInput
+              value={country}
+              onChangeText={(value) => setCountry(value)}
+              editable={true}
+            />
+          </View>
         </View>
-        <View style={styles.action}>
-          <Feather name="phone" color={colors.text} size={20} />
-          <TextInput
-            placeholder="Phone"
-            placeholderTextColor="#666666"
-            keyboardType="number-pad"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.action}>
-          <FontAwesome name="envelope-o" color={colors.text} size={20} />
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor="#666666"
-            keyboardType="email-address"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.action}>
-          <FontAwesome name="globe" color={colors.text} size={20} />
-          <TextInput
-            placeholder="Country"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.action}>
-          <Icon name="map-marker-outline" color={colors.text} size={20} />
-          <TextInput
-            placeholder="City"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: colors.text,
-              },
-            ]}
-          />
-        </View>
-        <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
-          <Text style={styles.panelButtonTitle}>Submit</Text>
+
+        <TouchableOpacity
+          style={{
+            height: 44,
+            borderRadius: 6,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{}}>Lưu</Text>
         </TouchableOpacity>
-      </Animated.View>
-    </View>
+
+        {renderDatePicker()}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 export default EditUser;
+
+
