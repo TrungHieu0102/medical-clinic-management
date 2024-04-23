@@ -6,18 +6,17 @@ const styles = StyleSheet.create({
   },
   userInfoSection: {
     paddingHorizontal: 30,
-    paddingVertical:15,
+    paddingVertical: 15,
     marginBottom: 25,
-    marginVertical:10,
-    backgroundColor:"white",
+    marginVertical: 10,
+    backgroundColor: "white",
     marginHorizontal: 20,
-    borderRadius: 10
-    
+    borderRadius: 10,
   },
-  userContact:{
-    color:"#777777",
+  userContact: {
+    color: "#777777",
     marginLeft: 20,
-    fontStyle:"italic"
+    fontStyle: "italic",
   },
   title: {
     fontSize: 24,
@@ -27,25 +26,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 14,
     fontWeight: "500",
-    fontStyle:"italic"
+    fontStyle: "italic",
   },
   row: {
     flexDirection: "row",
     margin: 5,
-    
   },
   menuWrapper: {
     paddingHorizontal: 5,
-    paddingVertical:5,
+    paddingVertical: 5,
     marginBottom: 25,
-    backgroundColor:"white",
+    backgroundColor: "white",
     marginHorizontal: 20,
-    borderRadius: 10
+    borderRadius: 10,
   },
   menuItem: {
     flexDirection: "row",
     paddingVertical: 15,
-    paddingHorizontal: 30
+    paddingHorizontal: 30,
   },
   menuItemText: {
     color: "black",
@@ -53,14 +51,18 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
     lineHeight: 26,
-    
+  },
+  spContainer:{
+    display:"flex",
+    justifyContent:"center",
+    alignItems:"center",
   },
   
   sp: {
-    width: "100%",
-    marginTop: 10,
+    width: "85%",
     height: 1,
-    backgroundColor: '#d9d9d9'
-  }
+    backgroundColor: "#d9d9d9",
+   
+  },
 });
 export default styles;

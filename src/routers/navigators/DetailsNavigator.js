@@ -1,15 +1,52 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Details from '../../components/Details/Details'
-
-const DetailsNavigator = ({navigation}) => {
-const DetailStack = createNativeStackNavigator()
+import { View, Text ,Button} from "react-native";
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Details from "../../components/Details/Details";
+import { useTheme, Avatar } from "react-native-paper";
+import EditUser from "../../components/Abouts/EditUser";
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+const DetailsNavigator = ({ navigation }) => {
+  const { colors } = useTheme();
+  const DetailStack = createNativeStackNavigator();
   return (
-   <DetailStack.Navigator  screenOptions={{headerShown: true}}>
-    <DetailStack.Screen name="Details" component = { Details} />
-   </DetailStack.Navigator>
-  )
-}
+    <DetailStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.background,
+          shadowColor: colors.background, // iOS
+          elevation: 0, // Android
+        },
+        headerTintColor: colors.text,
+      }}
+    >
+      <DetailStack.Screen
+        name="Details"
+        component={Details}
+        options={{
+          title: '',     
+          headerRight: () => (
+            <View style={{marginRight: 10}}>
+              <MaterialCommunityIcons.Button
+                name="account-edit"
+                size={25}
+                backgroundColor={colors.background}
+                color="black"
+                onPress={() => navigation.navigate('EditUser')}
+              />
+            </View>
+          ),
+        }}
+      />
+      <DetailStack.Screen
+        name="EditUser"
+        options={{
+          title: 'Edit Profile',
+        }}
+        component={EditUser}
+      />
+    </DetailStack.Navigator>
+  );
+};
 
-export default DetailsNavigator
+export default DetailsNavigator;
