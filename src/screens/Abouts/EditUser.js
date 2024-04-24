@@ -1,13 +1,13 @@
 import {
   View,
-  Text,
   TouchableOpacity,
   ScrollView,
   Image,
+  Text,
   TextInput,
   Modal,
-  StyleSheet,
 } from "react-native";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
@@ -45,9 +45,7 @@ const EditUser = ({ navigation }) => {
       aspect: [4, 4],
       quality: 1,
     });
-
     console.log(result);
-
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
     }
@@ -60,7 +58,7 @@ const EditUser = ({ navigation }) => {
         visible={openStartDatePicker}
       >
         <View style={styles.centeredView}>
-        <View style={styles.modalView}>
+          <View style={styles.modalView}>
             <DatePicker
               mode="calendar"
               selected={startedDate}
@@ -76,7 +74,6 @@ const EditUser = ({ navigation }) => {
                 borderColor: "rgba(122, 146, 165, 0.1)",
               }}
             />
-
             <TouchableOpacity onPress={handleOnPressStartDate}>
               <Text style={{ color: "white" }}>Lưu</Text>
             </TouchableOpacity>
@@ -86,13 +83,7 @@ const EditUser = ({ navigation }) => {
     );
   }
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-
-        paddingHorizontal: 22,
-      }}
-    >
+    <SafeAreaView style={styles.container}>
       <View
         style={{
           marginHorizontal: 12,
@@ -100,13 +91,16 @@ const EditUser = ({ navigation }) => {
           justifyContent: "center",
         }}
       ></View>
-      <ScrollView>
+
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
         <View
           style={{
             alignItems: "center",
             marginVertical: 22,
           }}
         >
+          {/* avatar */}
+
           <TouchableOpacity onPress={handleImageSelection}>
             <Image
               source={{ uri: selectedImage }}
@@ -115,9 +109,9 @@ const EditUser = ({ navigation }) => {
                 width: 170,
                 borderRadius: 85,
                 borderWidth: 2,
+                borderColor: "#3d85c6",
               }}
             />
-
             <View
               style={{
                 position: "absolute",
@@ -131,27 +125,18 @@ const EditUser = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <View>
-          <View
-            style={{
-              flexDirection: "column",
-              marginBottom: 6,
-            }}
-          >
-            <Text>Họ và tên</Text>
-            <View
-              style={{
-                height: 44,
-                width: "100%",
+        {/* user infor */}
 
-                borderWidth: 1,
-                borderRadius: 4,
-                marginVertical: 6,
-                justifyContent: "center",
-                paddingLeft: 8,
-              }}
-            >
+        <View style={{ marginVertical: 20 }}>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.label}>Họ và tên</Text>
+            <View style={styles.inputContainer}>
+            <Icon
+                name="account-outline"
+                style={styles.icon}
+              />
               <TextInput
+                style={styles.textInput}
                 value={name}
                 onChangeText={(value) => setName(value)}
                 editable={true}
@@ -159,25 +144,15 @@ const EditUser = ({ navigation }) => {
             </View>
           </View>
 
-          <View
-            style={{
-              flexDirection: "column",
-              marginBottom: 6,
-            }}
-          >
-            <Text>Email</Text>
-            <View
-              style={{
-                height: 44,
-                width: "100%",
-                borderWidth: 1,
-                borderRadius: 4,
-                marginVertical: 6,
-                justifyContent: "center",
-                paddingLeft: 8,
-              }}
-            >
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.label}>Email</Text>
+            <View style={styles.inputContainer}>
+            <Icon
+                name="email-outline"
+                style={styles.icon}
+              />
               <TextInput
+                style={styles.textInput}
                 value={email}
                 onChangeText={(value) => setEmail(value)}
                 editable={true}
@@ -185,26 +160,16 @@ const EditUser = ({ navigation }) => {
             </View>
           </View>
 
-          <View
-            style={{
-              flexDirection: "column",
-              marginBottom: 6,
-            }}
-          >
-            <Text>Mật khẩu</Text>
-            <View
-              style={{
-                height: 44,
-                width: "100%",
-
-                borderWidth: 1,
-                borderRadius: 4,
-                marginVertical: 6,
-                justifyContent: "center",
-                paddingLeft: 8,
-              }}
-            >
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.label}>Mật khẩu</Text>
+            
+            <View style={styles.inputContainer}>
+            <Icon
+                name="lock-outline"
+                style={styles.icon}
+              />
               <TextInput
+                style={styles.textInput}
                 value={password}
                 onChangeText={(value) => setPassword(value)}
                 editable={true}
@@ -213,66 +178,40 @@ const EditUser = ({ navigation }) => {
             </View>
           </View>
 
-          <View
-            style={{
-              flexDirection: "column",
-              marginBottom: 6,
-            }}
-          >
-            <Text>Ngày sinh</Text>
-            <TouchableOpacity
-              onPress={handleOnPressStartDate}
-              style={{
-                height: 44,
-                width: "100%",
-                borderWidth: 1,
-                borderRadius: 4,
-                marginVertical: 6,
-                justifyContent: "center",
-                paddingLeft: 8,
-              }}
-            >
-              <Text>{selectedStartDate}</Text>
-            </TouchableOpacity>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.label}>Ngày sinh</Text>
+            
+            <View style={styles.inputContainer}>
+            <Icon
+                name="calendar"
+                style={styles.icon}
+              />
+              <TouchableOpacity onPress={handleOnPressStartDate}>
+                <Text style={styles.dateTextInput}>{startedDate}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.label}>Địa chỉ</Text>
+            <View style={styles.inputContainer}>
+              <Icon
+                name="folder-home"
+                style={styles.icon}
+              />
+              <TextInput
+                style={styles.textInput}
+                value={country}
+                onChangeText={(value) => setCountry(value)}
+                editable={true}
+              />
+            </View>
           </View>
         </View>
-
-        <View
-          style={{
-            flexDirection: "column",
-            marginBottom: 6,
-          }}
-        >
-          <Text>Quê quán</Text>
-          <View
-            style={{
-              height: 44,
-              width: "100%",
-
-              borderWidth: 1,
-              borderRadius: 4,
-              marginVertical: 6,
-              justifyContent: "center",
-              paddingLeft: 8,
-            }}
-          >
-            <TextInput
-              value={country}
-              onChangeText={(value) => setCountry(value)}
-              editable={true}
-            />
-          </View>
-        </View>
-
-        <TouchableOpacity
-          style={{
-            height: 44,
-            borderRadius: 6,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text style={{}}>Lưu</Text>
+        <TouchableOpacity style={styles.button}>
+          <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
+            Lưu
+          </Text>
         </TouchableOpacity>
 
         {renderDatePicker()}
@@ -282,5 +221,3 @@ const EditUser = ({ navigation }) => {
 };
 
 export default EditUser;
-
-

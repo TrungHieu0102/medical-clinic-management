@@ -1,9 +1,9 @@
 import { View, Text ,Button} from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Details from "../../components/Details/Details";
+import Details from "../../screens/Details/Details";
 import { useTheme, Avatar } from "react-native-paper";
-import EditUser from "../../components/Abouts/EditUser";
+import EditUser from "../../screens/Abouts/EditUser";
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 const DetailsNavigator = ({ navigation }) => {

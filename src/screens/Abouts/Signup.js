@@ -53,8 +53,7 @@ export default function Signup({navigation}) {
           <Animated.View
             entering={FadeInDown.duration(1000).delay(600).springify()}
             className="w-full"
-          >
-             
+          >          
             <TouchableOpacity className="w-full bg-sky-400 p-3 rounded-2xl mb-3">
               <Text className="text-xl font-bold text-white text-center">
                 {" "}

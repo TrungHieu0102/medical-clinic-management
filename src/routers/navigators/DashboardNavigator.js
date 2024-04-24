@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import Dashboard from '../../components/Dashboard/Dashboard'
+import Dashboard from '../../screens/Dashboard/Dashboard'
 import { Avatar, Button, Card, Text } from 'react-native-paper';
 const DashboardNavigator = () => {
     const DashboardStack = createNativeStackNavigator()
