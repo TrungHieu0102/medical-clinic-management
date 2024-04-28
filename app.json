@@ -1,11 +1,20 @@
 {
   "expo": {
     "name": "medical-clinic-management",
+    "scheme": "doctorapp",
     "slug": "medical-clinic-management",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/ic_app.png",
     "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/Roboto-Medium.ttf"]
+        }
+      ]
+    ],
     "assetBundlePatterns": [
       "**/*"
     ],

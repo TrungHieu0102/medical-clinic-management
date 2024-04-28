@@ -15,17 +15,19 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { imagesDataURL } from "../../assets/constants/data";
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
 import styles from "./styles";
+
+
 const EditUser = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = useState(imagesDataURL[0]);
-  const [name, setName] = useState("Trung Hieu");
+  const [name, setName] = useState("Hà Trung Hiếu");
   const [email, setEmail] = useState("trunghieu@gmail.com");
   const [password, setPassword] = useState("randompassword");
-  const [country, setCountry] = useState("VietNam");
+  const [country, setCountry] = useState("Việt Nam");
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
   const today = new Date();
   const startDate = getFormatedDate(
     today.setDate(today.getDate() + 1),
-    "YYYY/MM/DD"
+    "DD/MM/YYYY"
   );
   const [selectedStartDate, setSelectedStartDate] = useState("01/01/1990");
   const [startedDate, setStartedDate] = useState("12/12/2023");
@@ -37,7 +39,7 @@ const EditUser = ({ navigation }) => {
   const handleOnPressStartDate = () => {
     setOpenStartDatePicker(!openStartDatePicker);
   };
-
+  
   const handleImageSelection = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -50,6 +52,7 @@ const EditUser = ({ navigation }) => {
       setSelectedImage(result.assets[0].uri);
     }
   };
+
   function renderDatePicker() {
     return (
       <Modal
@@ -161,8 +164,7 @@ const EditUser = ({ navigation }) => {
           </View>
 
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.label}>Mật khẩu</Text>
-            
+            <Text style={styles.label}>Mật khẩu</Text>           
             <View style={styles.inputContainer}>
             <Icon
                 name="lock-outline"
@@ -179,15 +181,14 @@ const EditUser = ({ navigation }) => {
           </View>
 
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.label}>Ngày sinh</Text>
-            
+            <Text style={styles.label}>Ngày sinh</Text>          
             <View style={styles.inputContainer}>
             <Icon
                 name="calendar"
                 style={styles.icon}
               />
               <TouchableOpacity onPress={handleOnPressStartDate}>
-                <Text style={styles.dateTextInput}>{startedDate}</Text>
+                <Text style={styles.dateTextInput}>{selectedStartDate}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -213,7 +214,6 @@ const EditUser = ({ navigation }) => {
             Lưu
           </Text>
         </TouchableOpacity>
-
         {renderDatePicker()}
       </ScrollView>
     </SafeAreaView>

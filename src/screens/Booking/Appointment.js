@@ -1,14 +1,12 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-const UserInfo = () => {
+const Appointment = ({ navigation }) => {
   return (
     <View>
-      <Text>
-        
-      </Text>
+      <Text>Appointment</Text>
     </View>
   )
 }
 
-export default UserInfo
+export default Appointment

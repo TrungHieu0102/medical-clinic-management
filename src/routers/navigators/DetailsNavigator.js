@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Details from "../../screens/Details/Details";
 import { useTheme, Avatar } from "react-native-paper";
 import EditUser from "../../screens/Abouts/EditUser";
-import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 const DetailsNavigator = ({ navigation }) => {
   const { colors } = useTheme();
@@ -41,7 +40,7 @@ const DetailsNavigator = ({ navigation }) => {
       <DetailStack.Screen
         name="EditUser"
         options={{
-          title: 'Edit Profile',
+          title: 'Thay đổi thông tin cá nhân',
         }}
         component={EditUser}
       />

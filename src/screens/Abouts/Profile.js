@@ -9,9 +9,10 @@ import {
 } from "react-native-paper";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import styles from "./styles";
+import { useAuth } from "@clerk/clerk-expo";
 
-const Details = () => {
+const Profile = () => {
+  const {isLoaded,signOut} = useAuth()
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
@@ -104,7 +105,7 @@ const Details = () => {
           <View style={styles.sp}></View>
         </View>
 
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple onPress={()=>signOut()}>
           <View style={styles.menuItem}>
             <Icon name="logout-variant" color="#3467E7" size={25} />
             <Text style={styles.menuItemText}>Đăng xuất</Text>
@@ -114,4 +115,70 @@ const Details = () => {
     </SafeAreaView>
   );
 };
-export default Details;
+export default Profile;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  userInfoSection: {
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    marginBottom: 25,
+    marginVertical: 10,
+    backgroundColor: "white",
+    marginHorizontal: 20,
+    borderRadius: 10,
+  },
+  userContact: {
+    color: "#777777",
+    marginLeft: 20,
+    fontStyle: "italic",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  caption: {
+    fontSize: 14,
+    lineHeight: 14,
+    fontWeight: "500",
+    fontStyle: "italic",
+  },
+  row: {
+    flexDirection: "row",
+    margin: 5,
+  },
+  menuWrapper: {
+    paddingHorizontal: 5,
+    paddingVertical: 5,
+    marginBottom: 25,
+    backgroundColor: "white",
+    marginHorizontal: 20,
+    borderRadius: 10,
+  },
+  menuItem: {
+    flexDirection: "row",
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+  },
+  menuItemText: {
+    color: "black",
+    marginLeft: 20,
+    fontWeight: "600",
+    fontSize: 16,
+    lineHeight: 26,
+  },
+  spContainer:{
+    display:"flex",
+    justifyContent:"center",
+    alignItems:"center",
+  },
+  
+  sp: {
+    width: "85%",
+    height: 1,
+    backgroundColor: "#d9d9d9",
+   
+  },
+})
+

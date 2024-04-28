@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import Colors from "../../assets/color/Colors";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -11,7 +12,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 10,
-    backgroundColor: "#3d85c6",
+    backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
@@ -39,28 +40,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderWidth: 0.5,
     borderRadius: 10,
-    borderColor: "#3d85c6",
+    borderColor: Colors.primary,
   },
   textInput: {
-    color: "#3d85c6",
+    color: Colors.primary,
     flex: 1,
   },
   dateTextInput: {
-    color: "#3d85c6",
+    color: Colors.primary,
     flex: 1,
     marginVertical: "25%",
   },
   button: {
     height: 55,
     width: "100%",
-    backgroundColor: "#5D5FEE",
+    backgroundColor: Colors.primary,
     marginVertical: 20,
     justifyContent: "center",
     alignItems: "center",
     borderRadius:10
   },
   icon: {
-    color: "#3d85c6",
+    color: Colors.primary,
     fontSize: 22,
     marginRight: 10,
     marginTop: "5%",

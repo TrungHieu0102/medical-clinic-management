@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as ImagePicker from "expo-image-picker";
+import SignInWithOAuth from "../../components/SignInWithOAuth";
 
 export default function Login({ navigation }) {
   
@@ -47,12 +48,7 @@ export default function Login({ navigation }) {
             entering={FadeInDown.duration(1000).delay(400).springify()}
             className="w-full"
           >
-            <TouchableOpacity className="w-full bg-sky-400 p-3 rounded-2xl mb-3">
-              <Text className="text-xl font-bold text-white text-center">
-                {" "}
-                Đăng nhập
-              </Text>
-            </TouchableOpacity>
+             <SignInWithOAuth/>
           </Animated.View>
           <Animated.View
             entering={FadeInDown.duration(1000).delay(600).springify()}
