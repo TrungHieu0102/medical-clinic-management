@@ -2,6 +2,7 @@ import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import GlobalAPI from "../../services/GlobalAPI";
 import Colors from "../../assets/color/Colors";
+import SubHeading from "./SubHeading";
 
 const Categories = () => {
   const [categoryList, setCategoryList] = useState();
@@ -13,11 +14,9 @@ const Categories = () => {
       if (resp && resp.data) {
         setCategoryList(resp.data.data);
       } else {
-        // Handle the case when resp or resp.data is undefined
         console.error("Response data is undefined");
       }
     }).catch((error) => {
-      // Handle any errors that occur during the API call
       console.error("Error fetching categories:", error);
     });
   };
@@ -27,32 +26,7 @@ const Categories = () => {
   }
   return (
     <View style={{ marginTop: 10 }}>
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: "bold",
-            fontWeight: 400,
-          }}
-        >
-          Danh sách bác sĩ hàng đầu
-        </Text>
-        <Text
-          style={{
-            fontFamily: "italic",
-            color: Colors.primary,
-          }}
-        >
-          Xem thêm
-        </Text>
-      </View>
+     <SubHeading subHeadingTitle={"Các danh mục khám bệnh"}/>
       <FlatList
         data={categoryList}
         numColumns={4}
@@ -76,9 +50,9 @@ const Categories = () => {
             <Image source={{ uri: item.attributes.Icon.data[0].attributes.url }} 
                 style={{height:30, width:30}}
             />
-
+          
             </View>
-            <Text>{item.attributes.Name}</Text>
+            <Text style={{marginBottom: 5}}>{item.attributes.Name}</Text>
           </View>
         
         )}

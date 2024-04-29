@@ -12,7 +12,10 @@ const AxioInstance = axios.create({
 
 const getSlider =()=>AxioInstance.get('/sliders?populate=*')
 const getCategories =()=>AxioInstance.get('/categories?populate=*')
+const getSpecialDoctors =()=>AxioInstance.get('/doctors?filters[Special][$eq]=true&populate=*')
+
 export default{
     getSlider,
-    getCategories
+    getCategories,
+    getSpecialDoctors
 }
