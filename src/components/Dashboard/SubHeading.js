@@ -23,14 +23,7 @@ const SubHeading = ({subHeadingTitle}) => {
         >
           {subHeadingTitle}
         </Text>
-        <Text
-          style={{
-            fontFamily: "italic",
-            color: Colors.primary,
-          }}
-        >
-          Xem thêm
-        </Text>
+     
       </View>
   )
 }

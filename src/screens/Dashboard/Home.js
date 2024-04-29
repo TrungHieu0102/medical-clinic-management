@@ -13,6 +13,7 @@ const Home = ({ navigation }) => {
         <Header/>
         <SearchBar setSearchText={(value)=>console.log(value)} />
         <Slider/>
+        
         <Categories/>
         <SpecialDoctor/>
         <Slider/>

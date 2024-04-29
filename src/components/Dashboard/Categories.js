@@ -3,8 +3,10 @@ import React, { useEffect, useState } from "react";
 import GlobalAPI from "../../services/GlobalAPI";
 import Colors from "../../assets/color/Colors";
 import SubHeading from "./SubHeading";
+import { useNavigation } from "@react-navigation/native";
 
 const Categories = () => {
+  const navigation = useNavigation();
   const [categoryList, setCategoryList] = useState();
   useEffect(() => {
     getCategories();
@@ -29,19 +31,23 @@ const Categories = () => {
      <SubHeading subHeadingTitle={"Các danh mục khám bệnh"}/>
       <FlatList
         data={categoryList}
-        numColumns={4}
+      
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
         style={{
             marginTop:5,
 
         }}
-        columnWrapperStyle={
-            {
-                flex:1,
-                justifyContent: "space-between"
-            }
+       
+        renderItem={({item, index}) => (
+          <TouchableOpacity 
+          onPress={()=>navigation.navigate("DoctorCategoryList",
+        {
+          categoryName :item.attributes.Name
         }
-        renderItem={({item, index}) =>index<4&& (
-          <View style={{alignItems:"center"}}>
+        )}
+        
+          style={{alignItems:"center", marginRight:15}}>
             <View style={{
                 backgroundColor:Colors.SECONDARY,
                 padding:15,
@@ -53,7 +59,7 @@ const Categories = () => {
           
             </View>
             <Text style={{marginBottom: 5}}>{item.attributes.Name}</Text>
-          </View>
+          </TouchableOpacity>
         
         )}
       />
