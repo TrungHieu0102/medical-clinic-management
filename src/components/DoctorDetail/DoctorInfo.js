@@ -1,6 +1,6 @@
 import { View, Text, FlatList } from "react-native";
 import React from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import HorizontalLine from "../Shared/HorizontalLine";
 import ActionButton from "./ActionButton";
 import Colors from "../../assets/color/Colors";
@@ -18,20 +18,41 @@ const DoctorInfo = ({ doctor }) => {
           {doctor.attributes.Name}
         </Text>
 
-        <FlatList
-          data={doctor.attributes.categories.data}
-          horizontal={true}
-          renderItem={({ item }) => (
-            <Text
-              style={{
-                marginRight: 10,  
-                color: Colors.GRAY,
-              }}
-            >
-              {item.attributes.Name},
-            </Text>
-          )}
-        />
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 5,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{fontFamily:"regular"}}>Chuyên khoa : </Text>
+          <FlatList
+            data={doctor.attributes.categories.data}
+            horizontal={true}
+            scrollEnabled={false}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  backgroundColor: Colors.SECONDARY,
+                  padding: 3,
+                  borderRadius: 100,
+                  alignItems: "center",
+                  marginRight: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    paddingHorizontal: 5,
+                    color: Colors.GRAY,
+                  }}
+                >
+                  {item.attributes.Name}
+                </Text>
+              </View>
+            )}
+          />
+        </View>
 
         <HorizontalLine />
         <View
@@ -42,7 +63,7 @@ const DoctorInfo = ({ doctor }) => {
             alignItems: "center",
           }}
         >
-          <Ionicons name="location" size={22} color={Colors.PRIMARY} />
+          <Ionicons name="location" size={22} color={Colors.primary} />
           <Text
             style={{
               fontSize: 16,
@@ -63,7 +84,7 @@ const DoctorInfo = ({ doctor }) => {
             marginTop: 6,
           }}
         >
-          <Ionicons name="time" size={22} color={Colors.PRIMARY} />
+          <Ionicons name="time" size={22} color={Colors.primary} />
           <Text
             style={{
               fontSize: 16,
@@ -71,7 +92,7 @@ const DoctorInfo = ({ doctor }) => {
               color: Colors.GRAY,
             }}
           >
-            Mon Sun | 11AM - 8 PM
+            Thứ 2 - Thứ 7 | 8 AM - 5 PM
           </Text>
         </View>
 
@@ -87,7 +108,7 @@ const DoctorInfo = ({ doctor }) => {
           }}
         ></View>
 
-        <SubHeading subHeadingTitle={"About"} />
+        <SubHeading subHeadingTitle={"Giới thiệu"} />
         <Text>{doctor.attributes.Description}</Text>
       </View>
     )

@@ -38,29 +38,37 @@ const DoctorDetail = () => {
                 padding: 20,
               }}
             >
-             
               <DoctorInfo doctor={doctor} />
             </View>
           </View>
-          </ScrollView>
-        <TouchableOpacity 
-            onPress={()=>navigation.navigate('book-appointment',{
-                hospital:hospital
-            })}
-        style={{
-            padding:13,
-            backgroundColor:Colors.primary,
-            margin:10,
-            borderRadius:10,
-            left:0,
-            right:0,
-            marginBottom:10,
-            zIndex:20
-        }}>
-            <Text style={{color:Colors.white,
-            textAlign:'center',
-            fontFamily:'medium',
-            fontSize:17}}>Đăng ký lịch khám</Text>
+        </ScrollView>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("BookAppointment", {
+              doctor: doctor,
+            })
+          }
+          style={{
+            padding: 13,
+            backgroundColor: Colors.primary,
+            margin: 10,
+            borderRadius: 10,
+            left: 0,
+            right: 0,
+            marginBottom: 10,
+            zIndex: 20,
+          }}
+        >
+          <Text
+            style={{
+              color: Colors.white,
+              textAlign: "center",
+              fontFamily: "medium",
+              fontSize: 17,
+            }}
+          >
+            Đăng ký lịch khám
+          </Text>
         </TouchableOpacity>
       </View>
     )

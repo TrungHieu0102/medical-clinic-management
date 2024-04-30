@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../../screens/Dashboard/Home";
 import DoctorCategoryList from "../../screens/Dashboard/DoctorCategoryList";
 import DoctorDetail from "../../screens/Dashboard/DoctorDetail";
+import BookAppointment from "../../screens/Booking/BookAppointment";
 const DashboardNavigator = () => {
   const DashboardStack = createNativeStackNavigator();
 
@@ -20,6 +21,11 @@ const DashboardNavigator = () => {
       <DashboardStack.Screen
         name="DoctorDetail"
         component={DoctorDetail}
+        options={{ headerShown: false }}
+      />
+       <DashboardStack.Screen
+        name="BookAppointment"
+        component={BookAppointment}
         options={{ headerShown: false }}
       />
     </DashboardStack.Navigator>
