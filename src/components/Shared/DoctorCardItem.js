@@ -9,8 +9,11 @@ import {
 import React from "react";
 import Colors from "../../assets/color/Colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useNavigation } from "@react-navigation/native";
 
 const DoctorCardItem = ({ doctor }) => {
+  const navigation = useNavigation();
+
   return (
     <ScrollView>
       <View
@@ -75,7 +78,10 @@ const DoctorCardItem = ({ doctor }) => {
             </Text>
           </View>
         </View>
-        <TouchableOpacity
+        <TouchableOpacity 
+          onPress={()=>navigation.navigate("BookAppointment",{
+            doctor:doctor
+        })}
           style={{
             marginTop: 10,
             padding: 10,

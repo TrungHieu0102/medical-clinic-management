@@ -28,7 +28,7 @@ const Categories = () => {
   }
   return (
     <View style={{ marginTop: 10 }}>
-     <SubHeading subHeadingTitle={"Các danh mục khám bệnh"}/>
+     <SubHeading subHeadingTitle={"Danh mục khám bệnh"}/>
       <FlatList
         data={categoryList}
       

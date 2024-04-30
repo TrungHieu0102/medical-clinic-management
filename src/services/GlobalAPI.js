@@ -18,11 +18,15 @@ const getDoctorsByCategory = (category) =>
     "doctors?filters[categories][Name][$in]=" + category + "&populate=*"
   );
 const createAppointment = (data) => AxioInstance.post("/appointments", data);
-
+const getAllDoctors = () => AxioInstance.get("doctors?populate=*");
+const getUserAppointments = (email) =>
+  AxioInstance.get("appointments?filters[email][$eq]=" + email + "&populate=*");
 export default {
   getSlider,
   getCategories,
   getSpecialDoctors,
   getDoctorsByCategory,
   createAppointment,
+  getAllDoctors,
+  getUserAppointments
 };

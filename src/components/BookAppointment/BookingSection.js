@@ -79,6 +79,7 @@ const BookingSection = ({doctor}) => {
     GlobalAPI.createAppointment(data).then(
       (resp) => {
         console.log(resp);
+        setLoader(false);
         ToastAndroid.show(
           "Đăng ký lịch khám thành công !",
           ToastAndroid.LONG
@@ -190,7 +191,7 @@ const BookingSection = ({doctor}) => {
       />
       <TouchableOpacity
         onPress={() => bookAppointment()}
-        // disabled={loader}
+         disabled={loader}
         style={{
           padding: 13,
           backgroundColor: Colors.primary,
