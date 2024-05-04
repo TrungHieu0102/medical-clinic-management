@@ -2,12 +2,11 @@ import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as ImagePicker from "expo-image-picker";
 import SignInWithOAuth from "../../components/SignInWithOAuth";
+import { useNavigation } from "@react-navigation/native";
 
-export default function Login({ navigation }) {
-  
+export default function Login() {
+  const navigation = useNavigation();
   return (
     <View className="bg-white h-full w-full">
       <StatusBar style="light" />
@@ -44,18 +43,22 @@ export default function Login({ navigation }) {
               secureTextEntry
             />
           </Animated.View>
+
+
           <Animated.View
             entering={FadeInDown.duration(1000).delay(400).springify()}
             className="w-full"
           >
              <SignInWithOAuth/>
           </Animated.View>
+
+          
           <Animated.View
             entering={FadeInDown.duration(1000).delay(600).springify()}
             className="flex-row justify-center"
           >
             <Text>Bạn chưa có tài khoản ? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+            <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}>
               <Text className="text-sky-600">Đăng ký</Text>
             </TouchableOpacity>
           </Animated.View>

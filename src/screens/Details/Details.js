@@ -10,8 +10,11 @@ import {
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import styles from "./styles";
+import { useUser } from "@clerk/clerk-expo";
 
 const Details = () => {
+  const { isLoaded, isSignedIn, user } = useUser();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>

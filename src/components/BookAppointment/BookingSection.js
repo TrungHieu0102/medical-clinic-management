@@ -6,8 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
-  ToastAndroid,
-} from "react-native";
+  } from "react-native";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import Colors from "../../assets/color/Colors";
@@ -80,10 +79,10 @@ const BookingSection = ({doctor}) => {
       (resp) => {
         console.log(resp);
         setLoader(false);
-        ToastAndroid.show(
-          "Đăng ký lịch khám thành công !",
-          ToastAndroid.LONG
-        );
+        // Toast.show(
+        //   "Đăng ký lịch khám thành công !",
+        //   Toast.LONG
+        // );
       },
       (error) => {
         console.log(error)
@@ -192,7 +191,7 @@ const BookingSection = ({doctor}) => {
       <TouchableOpacity
         onPress={() => bookAppointment()}
          disabled={loader}
-        style={{
+         style={{
           padding: 13,
           backgroundColor: Colors.primary,
           marginVertical: 20,

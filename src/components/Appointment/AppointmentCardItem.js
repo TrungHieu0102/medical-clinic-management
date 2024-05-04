@@ -1,11 +1,14 @@
-import { View, Text, Image } from "react-native";
-import React from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
 import HorizontalLine from "../Shared/HorizontalLine";
 import { Ionicons } from "@expo/vector-icons";
 import moment from "moment";
 import Colors from "../../assets/color/Colors";
 
-export default function AppointmentCardItem({ appointment }) {
+export default function AppointmentCardItem({
+  appointment,
+  deleteAppointment,
+}) {
   return (
     <View
       style={{
@@ -38,7 +41,7 @@ export default function AppointmentCardItem({ appointment }) {
       >
         <Image
           source={{
-            uri: "https://img.freepik.com/free-photo/beautiful-young-female-doctor-looking-camera-office_1301-7807.jpg?size=626&ext=jpg&ga=GA1.1.1413502914.1696464000&semt=sph",
+            uri: "https://res.cloudinary.com/dlgnuolsl/image/upload/v1714382817/thumbnail_doctor1_4cb290ada0.jpg",
           }}
           style={{ height: 100, borderRadius: 10, width: 90 }}
         />
@@ -79,6 +82,27 @@ export default function AppointmentCardItem({ appointment }) {
               Mã đơn : {appointment.id}
             </Text>
           </View>
+          <TouchableOpacity
+            onPress={() => deleteAppointment(appointment.id)}
+            style={{
+              padding: 8,
+              backgroundColor: "#fedbe5",
+              marginVertical: 10,
+              borderRadius: 10,
+              width: 150,
+            }}
+          >
+            <Text
+              style={{
+                color: "#e73458",
+                textAlign: "center",
+                fontFamily: "medium",
+                fontSize: 16,
+              }}
+            >
+              Hủy lịch khám
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

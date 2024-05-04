@@ -13,7 +13,7 @@ const SignInWithOAuth = () => {
   useWarmUpBrowser();
  
   const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
- 
+  
   const onPress = React.useCallback(async () => {
     try {
       const { createdSessionId, signIn, signUp, setActive } =
@@ -37,6 +37,7 @@ const SignInWithOAuth = () => {
     borderRadius:90,
     alignItems:'center',
     marginTop:20,
+    
     width:Dimensions.get('screen').width*0.8,
     }}>
       

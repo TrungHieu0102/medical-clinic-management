@@ -3,8 +3,8 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Details from "../../screens/Details/Details";
 import { useTheme, Avatar } from "react-native-paper";
-import EditUser from "../../screens/Abouts/EditUser";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import EditUser from "../../screens/Abouts/EditUser";
 const DetailsNavigator = ({ navigation }) => {
   const { colors } = useTheme();
   const DetailStack = createNativeStackNavigator();

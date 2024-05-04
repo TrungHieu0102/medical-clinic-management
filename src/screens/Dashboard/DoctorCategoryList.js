@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator,FlatList } from "react-native";
+import { View, Text, ActivityIndicator, FlatList } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import PageHeader from "../../components/Shared/PageHeader";
@@ -16,7 +16,6 @@ const DoctorCategoryList = () => {
   }, []);
   const getDoctorsByCategory = () => {
     GlobalAPI.getDoctorsByCategory(param?.categoryName).then((resp) => {
-     
       setDoctorList(resp.data.data);
     });
   };
@@ -27,7 +26,7 @@ const DoctorCategoryList = () => {
       {!doctorList?.length ? (
         <ActivityIndicator size={"large"} color={Colors.primary} />
       ) : (
-      <DoctorList doctorList={doctorList}/>
+        <DoctorList doctorList={doctorList} />
       )}
     </View>
   );

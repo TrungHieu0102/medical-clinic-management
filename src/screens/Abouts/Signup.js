@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
 
 
-export default function Signup({navigation}) {
+export default function Signup() {
   
 
   return (

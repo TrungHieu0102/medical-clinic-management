@@ -4,13 +4,12 @@ import TabNavigator from "./src/routers/TabNavigator";
 import { useFonts } from "expo-font";
 import {
   SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
+  SignedOut
 } from "@clerk/clerk-react";
 import { ClerkProvider } from "@clerk/clerk-expo/dist";
 import Login from "./src/screens/Abouts/Login";
 import { NavigationContainer } from "@react-navigation/native";
+import AboutNavigator from "./src/routers/navigators/AboutNavigator";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,16 +21,19 @@ export default function App() {
   return (
     <ClerkProvider publishableKey="pk_test_ZmxleGlibGUtam9leS02OS5jbGVyay5hY2NvdW50cy5kZXYk">
       <SafeAreaView style={styles.container}>
+        {/* Signin successfully */}
         <SignedIn>
           <NavigationContainer>
             <TabNavigator />
           </NavigationContainer>
         </SignedIn>
-        <SignedOut>
-          <Login />
+        {/* SignOut */}
+        <SignedOut> 
+          <NavigationContainer>
+           <AboutNavigator/>
+          </NavigationContainer>
         </SignedOut>
       </SafeAreaView>
-
     </ClerkProvider>
   );
 }
@@ -40,6 +42,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-  
   },
 });
