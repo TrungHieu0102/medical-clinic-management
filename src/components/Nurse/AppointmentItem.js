@@ -1,29 +1,27 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
-import HorizontalLine from "../Shared/HorizontalLine";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { useUser } from "@clerk/clerk-expo";
 import moment from "moment";
+import HorizontalLine from "../Shared/HorizontalLine";
 import Colors from "../../assets/color/Colors";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 
-
-export default function AppointmentCardItem({ appointment, deleteAppointment }) {
+const AppointmentItem = ({ appointment }) => {
+  const { isLoaded, isSignedIn, user } = useUser();
+  if (!isLoaded || !isSignedIn) {
+    return null;
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.dateText}>
-        {moment(appointment.attributes.Date).format("DD/MM/YYYY")} - {appointment.attributes.Time}
+        {moment(appointment.attributes.Date).format("DD/MM/YYYY")} -{" "}
+        {appointment.attributes.Time}
       </Text>
       <HorizontalLine />
-      <View style={styles.doctorInfoContainer}>
-        <Image
-          source={{
-            uri:appointment.attributes.Doctor.data.attributes.image.data[0].attributes.url
-          }}
-          style={styles.doctorImage}  
-        />
+      <View style={styles.userInfoContainer}>
+        <Image source={{ uri: user.imageUrl }} style={styles.userImage} />
         <View>
-          <Text style={styles.doctorName}>
-            {appointment.attributes.Doctor.data.attributes.Name}
-          </Text>
+          <Text style={styles.userName}>{appointment.attributes.Username}</Text>
           <View style={styles.infoText}>
             <Ionicons name="location" size={20} color={Colors.primary} />
             <Text>{appointment.attributes.Doctor.data.attributes.Address}</Text>
@@ -32,28 +30,12 @@ export default function AppointmentCardItem({ appointment, deleteAppointment }) 
             <Ionicons name="document-text" size={20} color={Colors.primary} />
             <Text>Mã đơn : {appointment.id}</Text>
           </View>
-          <View style={styles.infoText}>
-            <AntDesign name="Safety" size={20} color={Colors.primary} />
-            <Text>
-              Trạng thái:{" "}
-              <Text
-                style={{
-                  color: appointment.attributes.Confirmed ? Colors.primary : "#e73458",
-                }}
-              >
-                {appointment.attributes.Confirmed ? "Đã xác nhận" : "Chưa xác nhận"}
-              </Text>
-            </Text>
-          </View>
-          <TouchableOpacity onPress={() => deleteAppointment(appointment.id)} style={styles.actionButton}>
-            <Text style={styles.actionButtonText}>Hủy lịch khám</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </View>
   );
-}
- const styles =StyleSheet.create ( {
+};
+const styles = StyleSheet.create({
   container: {
     padding: 10,
     borderWidth: 1,
@@ -67,19 +49,19 @@ export default function AppointmentCardItem({ appointment, deleteAppointment }) 
     marginTop: 10,
     fontFamily: "medium",
   },
-  doctorInfoContainer: {
+  userInfoContainer: {
     display: "flex",
     flexDirection: "row",
     gap: 10,
     alignItems: "center",
   },
-  doctorImage: {
+  userImage: {
     height: 100,
     borderRadius: 10,
     width: 90,
-    marginTop: -55,
+   
   },
-  doctorName: {
+  userName: {
     fontSize: 16,
     fontFamily: "medium",
   },
@@ -105,4 +87,5 @@ export default function AppointmentCardItem({ appointment, deleteAppointment }) 
     fontFamily: "medium",
     fontSize: 16,
   },
-})
+});
+export default AppointmentItem;

@@ -11,7 +11,6 @@ const MedicineListScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-
   const fetchAllMedicines = async () => {
     try {
       const response = await GlobalAPI.getAllMedicine();
@@ -20,11 +19,9 @@ const MedicineListScreen = () => {
       console.error("Lỗi khi lấy danh sách thuốc:", error);
     }
   };
-
   useEffect(() => {
     fetchAllMedicines();
   }, []);
-
   const searchMedicines = async () => {
     try {
       const response = await GlobalAPI.getMedicineByName(searchTerm);
@@ -66,7 +63,6 @@ const MedicineListScreen = () => {
     updatedMedicines.splice(index, 1);
     setSelectedMedicines(updatedMedicines);
   };
-
   return (
     <View style={styles.container}>
       <PageHeader title={"Đơn thuốc"} backButton={false} />
@@ -75,11 +71,6 @@ const MedicineListScreen = () => {
         onRemoveMedicine={removeMedicine}
         toggleModal ={toggleModal}
       />
-      {/* <View style={styles.addButtonContainer}>
-        <TouchableOpacity onPress={toggleModal} style={styles.addButton}>
-          <AntDesign name="pluscircleo" size={24} color={Colors.primary} />
-        </TouchableOpacity>
-      </View> */}
       <TouchableOpacity style={styles.payButton}>
         <Text style={styles.payButtonText}>Thanh toán</Text>
       </TouchableOpacity>

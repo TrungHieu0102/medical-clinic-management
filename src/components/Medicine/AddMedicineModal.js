@@ -25,7 +25,6 @@ const AddMedicineModal = ({
         searchTerm.toLowerCase()
       ) !== -1
   );
-
   return (
     <Modal visible={visible} animationType="slide">
       <View style={styles.modalContainer}>
