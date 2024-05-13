@@ -1,9 +1,21 @@
 import React, { useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  TextInput,
+} from "react-native";
 import { Feather, AntDesign, Ionicons } from "@expo/vector-icons";
 import Colors from "../../assets/color/Colors";
 
-const SelectedMedicinesList = ({ selectedMedicines, onRemoveMedicine, toggleModal }) => {
+const SelectedMedicinesList = ({
+  selectedMedicines,
+  onRemoveMedicine,
+  toggleModal,
+}) => {
   const [quantity, setQuantity] = useState(0);
 
   const decreaseQuantity = () => {
@@ -26,22 +38,34 @@ const SelectedMedicinesList = ({ selectedMedicines, onRemoveMedicine, toggleModa
             <TouchableOpacity style={styles.medicineContent}>
               <View style={styles.imageContainer}>
                 <Image
-                  source={{ uri: "https://res.cloudinary.com/dlgnuolsl/image/upload/v1714734420/thuoc1_df093a101e.jpg" }}
+                  source={{
+                    uri: "https://res.cloudinary.com/dlgnuolsl/image/upload/v1714734420/thuoc1_df093a101e.jpg",
+                  }}
                   style={styles.image}
                 />
               </View>
               <View style={styles.infoContainer}>
-                <Text style={styles.medicineName}>{item.attributes.Name}</Text>
+                <Text style={styles.medicineName}>{item.name}</Text>
                 <View style={styles.detailContainer}>
-                  <Ionicons name="information-circle-sharp" size={16} color={Colors.primary} />
+                  <Ionicons
+                    name="pricetag-outline"
+                    size={16}
+                    color={Colors.primary}
+                  />
                   <View style={styles.detailTextContainer}>
-                    <Text style={styles.detailText}>{item.attributes.Detail}</Text>
+                    <Text style={styles.detailText}>{item.price}</Text>
                   </View>
                 </View>
                 <View style={styles.quantityContainer}>
                   <View style={styles.quantityButtons}>
-                    <TouchableOpacity style={styles.quantityButton} onPress={decreaseQuantity}>
-                      <AntDesign name="minuscircleo" style={styles.quantityIcon} />
+                    <TouchableOpacity
+                      style={styles.quantityButton}
+                      onPress={decreaseQuantity}
+                    >
+                      <AntDesign
+                        name="minuscircleo"
+                        style={styles.quantityIcon}
+                      />
                     </TouchableOpacity>
                     <TextInput
                       keyboardType="numeric"
@@ -49,11 +73,20 @@ const SelectedMedicinesList = ({ selectedMedicines, onRemoveMedicine, toggleModa
                       value={quantity.toString()}
                       onChangeText={(value) => setQuantity(parseInt(value))}
                     />
-                    <TouchableOpacity style={styles.quantityButton} onPress={increaseQuantity}>
-                      <AntDesign name="pluscircleo" style={styles.quantityIcon} />
+                    <TouchableOpacity
+                      style={styles.quantityButton}
+                      onPress={increaseQuantity}
+                    >
+                      <AntDesign
+                        name="pluscircleo"
+                        style={styles.quantityIcon}
+                      />
                     </TouchableOpacity>
                   </View>
-                  <TouchableOpacity style={styles.deleteButton} onPress={() => onRemoveMedicine(index)}>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => onRemoveMedicine(index)}
+                  >
                     <Feather name="delete" style={styles.deleteIcon} />
                   </TouchableOpacity>
                 </View>
@@ -95,15 +128,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.LIGHT_GRAY,
     borderRadius: 10,
-    margin: 10
+    margin: 10,
   },
   image: {
     width: "100%",
     height: "100%",
     resizeMode: "cover",
     borderRadius: 10,
-   
-  
   },
   infoContainer: {
     flex: 1,
@@ -159,7 +190,7 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     marginRight: 10,
-    borderRadius: 100
+    borderRadius: 100,
   },
   deleteIcon: {
     fontSize: 16,

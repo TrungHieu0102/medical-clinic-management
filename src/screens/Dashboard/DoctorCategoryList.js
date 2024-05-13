@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import PageHeader from "../../components/Shared/PageHeader";
 import DoctorTab from "../../components/DoctorCategoryList/DoctorTab";
-import { Global } from "iconsax-react-native";
 import GlobalAPI from "../../services/GlobalAPI";
 import Colors from "../../assets/color/Colors";
 import DoctorList from "../../components/DoctorCategoryList/DoctorList";
@@ -11,12 +10,22 @@ import DoctorList from "../../components/DoctorCategoryList/DoctorList";
 const DoctorCategoryList = () => {
   const param = useRoute().params;
   const [doctorList, setDoctorList] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     getDoctorsByCategory();
   }, []);
+
   const getDoctorsByCategory = () => {
-    GlobalAPI.getDoctorsByCategory(param?.categoryName).then((resp) => {
-      setDoctorList(resp.data.data);
+    GlobalAPI.getDoctors().then((resp) => {
+      const filteredDoctors = resp.data.results.filter(
+        (doctor) => doctor.category === param?.categoryName
+      );
+      setDoctorList(filteredDoctors);
+      setLoading(false);
+    }).catch((error) => {
+      console.error("Lỗi khi lấy danh sách bác sĩ theo danh mục:", error);
+      setLoading(false);
     });
   };
   return (
@@ -29,6 +38,7 @@ const DoctorCategoryList = () => {
         <DoctorList doctorList={doctorList} />
       )}
     </View>
+  
   );
 };
 

@@ -11,21 +11,26 @@ const MedicineListScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+
   const fetchAllMedicines = async () => {
     try {
       const response = await GlobalAPI.getAllMedicine();
-      setMedicines(response.data.data);
+      setMedicines(response.data.results);
     } catch (error) {
       console.error("Lỗi khi lấy danh sách thuốc:", error);
     }
   };
+
   useEffect(() => {
     fetchAllMedicines();
   }, []);
-  const searchMedicines = async () => {
+
+  const searchMedicines = () => {
     try {
-      const response = await GlobalAPI.getMedicineByName(searchTerm);
-      setMedicines(response.data.data);
+      const filteredMedicines = medicines.filter(medicine =>
+        medicine.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setMedicines(filteredMedicines);
     } catch (error) {
       console.error("Lỗi khi tìm kiếm thuốc:", error);
     }
@@ -50,10 +55,8 @@ const MedicineListScreen = () => {
     const isExist = selectedMedicines.some((item) => item.id === medicine.id);
     if (!isExist) {
       setSelectedMedicines([...selectedMedicines, medicine]);
-      // Toast.show("Thành công", Toast.SHORT);
       toggleModal();
     } else {
-      // Toast.show("Thuốc đã được thêm trước đó", Toast.SHORT);
       toggleModal();
     }
   };
@@ -63,13 +66,14 @@ const MedicineListScreen = () => {
     updatedMedicines.splice(index, 1);
     setSelectedMedicines(updatedMedicines);
   };
+
   return (
     <View style={styles.container}>
       <PageHeader title={"Đơn thuốc"} backButton={false} />
       <SelectedMedicinesList
         selectedMedicines={selectedMedicines}
         onRemoveMedicine={removeMedicine}
-        toggleModal ={toggleModal}
+        toggleModal={toggleModal}
       />
       <TouchableOpacity style={styles.payButton}>
         <Text style={styles.payButtonText}>Thanh toán</Text>
@@ -91,17 +95,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     position: "relative",
-    backgroundColor:"white"
-  },
-  addButtonContainer: {
-    alignSelf: "flex-end", // Đặt container ở phía dưới bên phải
-    marginBottom: 10, // Khoảng cách giữa danh sách và nút thêm
-  },
-  addButton: {
-    padding: 10,
-    backgroundColor: Colors.SECONDARY,
-    borderRadius: 100,
-    marginRight: 4,
+    backgroundColor: "white"
   },
   payButton: {
     padding: 10,

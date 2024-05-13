@@ -17,9 +17,10 @@ const AppointmentList = ({
   handleRefresh,
   refreshing,
 }) => (
-  <View>
+  <View >
     <FlatList
       data={appointments}
+      showsVerticalScrollIndicator={false}
       onRefresh={handleRefresh}
       refreshing={refreshing}
       renderItem={({ item }) => (

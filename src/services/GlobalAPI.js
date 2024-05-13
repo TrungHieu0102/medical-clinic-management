@@ -1,59 +1,58 @@
-import axios from "axios";
-const BASE_URL = "http://172.20.10.2:1337/api";
-const API_KEY =
-  "f10378555bbee8474223237251779b6e9d9753979b53ea44b69bb069c503ad9a77eb7b891c349940f9401c6a1431c0aad1f61158b3fb9f5c9348f9b0b1656b3d9dcd245f4c4107be35d8288314847b81b6547bb971126668b176347fa50695a960528692511793c38297c3e9ebadca46c00ddd819d3f281822c0ceff0c7d679f";
-const AxioInstance = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    Authorization: "Bearer " + API_KEY,
-  },
-});
-const getSlider = () => AxioInstance.get("/sliders?populate=*");
-const getCategories = () => AxioInstance.get("/categories?populate=*");
-const getSpecialDoctors = () =>
-  AxioInstance.get("/doctors?filters[Special][$eq]=true&populate=*");
-const getDoctorsByCategory = (category) =>
-  AxioInstance.get(
-    "doctors?filters[categories][Name][$in]=" + category + "&populate=*"
-  );
-const createAppointment = (data) => AxioInstance.post("/appointments", data);
-const getAllDoctors = () => AxioInstance.get("doctors?populate=*");
-const getUserAppointments = (email) =>
-  AxioInstance.get(
-    "appointments?filters[email][$eq]=" +
-      email +
-      "&populate[Doctor][populate][0]=image"
-  );
-const getAppointmentsByUsername = (username) =>
-  AxioInstance.get(
-    "appointments?filters[email][$eq]=" + username + "&populate=*"
-  );
-const deleteAppointments = (id) => AxioInstance.delete("/appointments/" + id);
-const getAllMedicine = () => AxioInstance.get("medicines?populate=*");
-const getMedicineByName = (name) =>
-  AxioInstance.get("medicines?filters[name][$containsi]=" + name);
-const getAppointmentsPending = () =>
-  AxioInstance.get("appointments?filters[Confirmed][$eq]=false&populate[Doctor][populate][0]=image");
-const getAppointmentsPendingByParam = (param) =>
-  AxioInstance.get(
-    "appointments?filters[$or][0][Username][$containsi]=" +
-      param +
-      "&filters[$or][1][Email][$containsi]=" +
-      param +
-      "&populate[Doctor][populate][0]=image"
-  );
-export default {
-  getSlider,
-  getCategories,
-  getSpecialDoctors,
-  getDoctorsByCategory,
-  createAppointment,
-  getAllDoctors,
-  getUserAppointments,
-  deleteAppointments,
-  getAllMedicine,
-  getMedicineByName,
-  getAppointmentsPending,
-  getAppointmentsByUsername,
-  getAppointmentsPendingByParam,
-};
+  import axios from "axios";
+  const BASE_URL = "https://4d46-171-243-49-70.ngrok-free.app/";
+  const ACCESSTOKEN  =
+    "zIBBsoB18Egp1jk3XPVaxRmD0WQKnF";
+  const AxioInstance = axios.create({ 
+    baseURL: BASE_URL,
+    headers: {
+      Authorization: "Bearer " + ACCESSTOKEN,
+    },
+  });
+  const getCategories = () => AxioInstance.get("categories/");
+  //////
+  const getDoctors = () =>
+    AxioInstance.get("doctors/");
+  const getDoctorsByCategory = (category) =>
+    AxioInstance.get(
+      "doctors?filters[categories][Name][$in]=" + category + "&populate=*"
+    );
+  const createAppointment = (data) => AxioInstance.post("/appointments", data);
+  const getAllDoctors = () => AxioInstance.get("doctors?populate=*");
+  const getUserAppointments = (email) =>
+    AxioInstance.get(
+      "appointments?filters[email][$eq]=" +
+        email +
+        "&populate[Doctor][populate][0]=image"
+    );
+  const getAppointmentsByUsername = (username) =>
+    AxioInstance.get(
+      "appointments?filters[email][$eq]=" + username + "&populate=*"
+    );
+  const deleteAppointments = (id) => AxioInstance.delete("/appointments/" + id);
+  const getAllMedicine = () => AxioInstance.get("medicines/");
+  const getMedicineByName = (name) =>
+    AxioInstance.get("medicines?filters[name][$containsi]=" + name);
+  const getAppointmentsPending = () =>
+    AxioInstance.get("appointments?filters[Confirmed][$eq]=false&populate[Doctor][populate][0]=image");
+  const getAppointmentsPendingByParam = (param) =>
+    AxioInstance.get(
+      "appointments?filters[$or][0][Username][$containsi]=" +
+        param +
+        "&filters[$or][1][Email][$containsi]=" +
+        param +
+        "&populate[Doctor][populate][0]=image"
+    );
+  export default {
+    getCategories,
+    getDoctors,
+    getDoctorsByCategory,
+    createAppointment,
+    getAllDoctors,
+    getUserAppointments,
+    deleteAppointments,
+    getAllMedicine,
+    getMedicineByName,
+    getAppointmentsPending,
+    getAppointmentsByUsername,
+    getAppointmentsPendingByParam,
+  };

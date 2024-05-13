@@ -14,7 +14,7 @@ const DoctorItem = ({ doctor }) => {
       }}
     >
       <Image
-        source={{ uri: doctor.attributes.image.data[0].attributes.url }}
+        source={{ uri: doctor.user.avatar }}
         style={{
           width: "100%",
           height: 110,
@@ -23,8 +23,8 @@ const DoctorItem = ({ doctor }) => {
         }}
       />
       <View>
-        <Text style={{ fontFamily: "bold", fontSize: 16, fontWeight: 400 }}>
-          {doctor.attributes.Name}
+        <Text style={{ fontFamily: "bold", fontSize: 16 }}>
+        {doctor.user.first_name} {doctor.user.last_name}
         </Text>
         <Text
           style={{
@@ -34,7 +34,7 @@ const DoctorItem = ({ doctor }) => {
             color: Colors.GRAY,
           }}
         >
-          {doctor.attributes.Address}
+          {doctor.user.location}
         </Text>
       </View>
     </View>

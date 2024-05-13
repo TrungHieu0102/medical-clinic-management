@@ -10,8 +10,9 @@ import Colors from "../../assets/color/Colors";
 const AllDoctor = () => {
   const [listAllDoctor, setListDoctor] = useState([]);
   const getListDoctor = () => {
-    GlobalAPI.getAllDoctors().then((resp) => {
-      setListDoctor(resp.data.data);
+    GlobalAPI.getDoctors().then((resp) => {
+      setListDoctor(resp.data.results);
+      
     });
   };
   useEffect(() => {

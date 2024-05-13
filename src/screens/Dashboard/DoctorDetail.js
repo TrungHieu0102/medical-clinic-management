@@ -6,12 +6,16 @@ import DoctorInfo from "../../components/DoctorDetail/DoctorInfo";
 import Colors from "../../assets/color/Colors";
 
 const DoctorDetail = () => {
-  const [doctor, setDoctor] = useState();
-  const param = useRoute().params;
+  const [doctor, setDoctor] = useState(null);
+  const route = useRoute();
   const navigation = useNavigation();
+
   useEffect(() => {
-    setDoctor(param.doctor);
-  }, []);
+    if (route.params ) {
+      setDoctor(route.params.doctor);
+      
+    }
+  }, [route.params]);
 
   return (
     doctor && (
@@ -22,7 +26,7 @@ const DoctorDetail = () => {
           </View>
           <View>
             <Image
-              source={{ uri: doctor.attributes.image.data[0].attributes.url }}
+              source={{ uri: doctor.user.avatar }}
               style={{
                 width: "100%",
                 height: 260,
@@ -72,6 +76,7 @@ const DoctorDetail = () => {
         </TouchableOpacity>
       </View>
     )
+    
   );
 };
 

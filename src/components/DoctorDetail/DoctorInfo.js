@@ -1,10 +1,8 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text } from "react-native";
 import React from "react";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
-import HorizontalLine from "../Shared/HorizontalLine";
-import ActionButton from "./ActionButton";
 import Colors from "../../assets/color/Colors";
 import SubHeading from "../Dashboard/SubHeading";
+
 const DoctorInfo = ({ doctor }) => {
   return (
     doctor && (
@@ -15,7 +13,7 @@ const DoctorInfo = ({ doctor }) => {
             fontFamily: "bold",
           }}
         >
-          {doctor.attributes.Name}
+          {doctor.user.first_name} {doctor.user.last_name}
         </Text>
 
         <View
@@ -26,35 +24,9 @@ const DoctorInfo = ({ doctor }) => {
             alignItems: "center",
           }}
         >
-          <Text style={{fontFamily:"regular"}}>Chuyên khoa : </Text>
-          <FlatList
-            data={doctor.attributes.categories.data}
-            horizontal={true}
-            scrollEnabled={false}
-            renderItem={({ item }) => (
-              <View
-                style={{
-                  backgroundColor: Colors.SECONDARY,
-                  padding: 3,
-                  borderRadius: 100,
-                  alignItems: "center",
-                  marginRight: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    paddingHorizontal: 5,
-                    color: Colors.GRAY,
-                  }}
-                >
-                  {item.attributes.Name}
-                </Text>
-              </View>
-            )}
-          />
+          <Text style={{ fontFamily: "regular" }}>Chuyên khoa: {doctor.category}</Text>
         </View>
 
-        <HorizontalLine />
         <View
           style={{
             display: "flex",
@@ -63,16 +35,7 @@ const DoctorInfo = ({ doctor }) => {
             alignItems: "center",
           }}
         >
-          <Ionicons name="location" size={22} color={Colors.primary} />
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: "regular",
-              color: Colors.GRAY,
-            }}
-          >
-            {doctor.attributes.Address}
-          </Text>
+          <Text style={{ fontFamily: "regular" }}>Địa chỉ: {doctor.user.location}</Text>
         </View>
 
         <View
@@ -84,19 +47,8 @@ const DoctorInfo = ({ doctor }) => {
             marginTop: 6,
           }}
         >
-          <Ionicons name="time" size={22} color={Colors.primary} />
-          <Text
-            style={{
-              fontSize: 16,
-              fontFamily: "regular",
-              color: Colors.GRAY,
-            }}
-          >
-            Thứ 2 - Thứ 7 | 8 AM - 5 PM
-          </Text>
+          <Text style={{ fontFamily: "regular" }}>Giờ làm việc: Thứ 2 - Thứ 7 | 8 AM - 5 PM</Text>
         </View>
-
-        <ActionButton />
 
         <View
           style={{
@@ -109,7 +61,7 @@ const DoctorInfo = ({ doctor }) => {
         ></View>
 
         <SubHeading subHeadingTitle={"Giới thiệu"} />
-        <Text>{doctor.attributes.Description}</Text>
+        <Text>{doctor.description}</Text>
       </View>
     )
   );

@@ -26,11 +26,11 @@ const DoctorCardItem = ({ doctor }) => {
       >
         <View style={{ display: "flex", flexDirection: "row", gap: 20 }}>
           <Image
-            source={{ uri: doctor.attributes.image.data[0].attributes.url }}
+            source={{ uri: doctor.user.avatar }}
             style={{ width: 110, height: 120, borderRadius: 10 }}
           />
           <View style={{ marginTop: 10 }}>
-            {doctor.attributes.Special == true ? (
+            {doctor.price > 100 ? (
               <View
                 style={{
                   display: "flex",
@@ -54,7 +54,7 @@ const DoctorCardItem = ({ doctor }) => {
               </View>
             ) : null}
             <Text style={{ fontSize: 17, fontFamily: "bold", marginTop: 5 }}>
-              {doctor.attributes.Name}
+              {doctor.user.first_name} {doctor.user.last_name}
             </Text>
 
             <Text
@@ -64,7 +64,7 @@ const DoctorCardItem = ({ doctor }) => {
                 marginTop: 1,
               }}
             >
-              {doctor.attributes.categories.data[0].attributes.Name}
+              {doctor.category}
             </Text>
 
             <Text
@@ -74,7 +74,7 @@ const DoctorCardItem = ({ doctor }) => {
                 marginTop: 3,
               }}
             >
-              {doctor.attributes.Year_of_Experience} năm kinh nghiệm
+             Giá: {doctor.price}
             </Text>
           </View>
         </View>

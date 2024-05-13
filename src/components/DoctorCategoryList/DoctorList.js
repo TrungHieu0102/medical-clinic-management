@@ -8,6 +8,7 @@ const DoctorList = ({doctorList}) => {
   return (
     <View style={{marginTop:15}}>
     <FlatList data={doctorList}
+    showsVerticalScrollIndicator={false}
     renderItem={({item})=>(
         <TouchableOpacity onPress={()=>navigation.navigate("DoctorDetail",{
             doctor:item

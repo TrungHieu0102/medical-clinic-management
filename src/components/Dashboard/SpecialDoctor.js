@@ -9,8 +9,9 @@ const SpecialDoctor = () => {
   const navigation = useNavigation();
   const [doctorList, setDoctorList] = useState([]);
   const getSpecialDoctors = () => {
-    GlobalAPI.getSpecialDoctors().then((resp) => {
-      setDoctorList(resp.data.data);
+    GlobalAPI.getDoctors().then((resp) => {
+      const filteredDoctors = resp.data.results.filter(doctor => doctor.price > 100);
+      setDoctorList(filteredDoctors);
     });
   };
   useEffect(() => {

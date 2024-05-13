@@ -21,7 +21,7 @@ const AddMedicineModal = ({
 }) => {
   const filteredMedicines = medicines.filter(
     (medicine) =>
-      medicine.attributes.Name.toLowerCase().indexOf(
+      medicine.name.toLowerCase().indexOf(
         searchTerm.toLowerCase()
       ) !== -1
   );
@@ -56,9 +56,9 @@ const AddMedicineModal = ({
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => onMedicineSelect(item)}>
               <View style={styles.itemContainer}>
-                <Text style={styles.text}>{item.attributes.Name}</Text>
+                <Text style={styles.text}>{item.name}</Text>
                 <Text style={styles.quantityText}>
-                  Số lượng: {item.attributes.Quantity}
+                  Giá: {item.price}
                 </Text>
               </View>
             </TouchableOpacity>
