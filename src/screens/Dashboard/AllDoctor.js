@@ -9,11 +9,13 @@ import Colors from "../../assets/color/Colors";
 
 const AllDoctor = () => {
   const [listAllDoctor, setListDoctor] = useState([]);
-  const getListDoctor = () => {
-    GlobalAPI.getDoctors().then((resp) => {
-      setListDoctor(resp.data.results);
-      
-    });
+  const getListDoctor = async () => {
+    try {
+      const response = await GlobalAPI.getDoctors();
+      setListDoctor(response.data.results);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách bác sĩ:", error);
+    }
   };
   useEffect(() => {
     getListDoctor();

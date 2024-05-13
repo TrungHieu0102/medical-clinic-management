@@ -13,7 +13,7 @@ import GlobalAPI from "../../services/GlobalAPI";
 import { useFocusEffect } from '@react-navigation/native';
 
 export default function Appointment() {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const {  user } = useUser();
   const [appointmentList, setAppointmentList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 

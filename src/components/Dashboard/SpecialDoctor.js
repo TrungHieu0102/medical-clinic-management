@@ -1,22 +1,31 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, FlatList, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import SubHeading from "./SubHeading";
 import GlobalAPI from "../../services/GlobalAPI";
 import DoctorItem from "./DoctorItem";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
+
 const SpecialDoctor = () => {
   const navigation = useNavigation();
   const [doctorList, setDoctorList] = useState([]);
-  const getSpecialDoctors = () => {
-    GlobalAPI.getDoctors().then((resp) => {
-      const filteredDoctors = resp.data.results.filter(doctor => doctor.price > 100);
+
+  const getSpecialDoctors = async () => {
+    try {
+      const resp = await GlobalAPI.getDoctors();
+      const filteredDoctors = resp.data.results.filter(
+        (doctor) => doctor.price > 100
+      );
       setDoctorList(filteredDoctors);
-    });
+    } catch (error) {
+      console.error("Error fetching special doctors:", error);
+    }
   };
+
   useEffect(() => {
     getSpecialDoctors();
   }, []);
+
   return (
     doctorList && (
       <View style={{ marginTop: 10 }}>

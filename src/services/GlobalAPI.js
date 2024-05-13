@@ -1,21 +1,19 @@
   import axios from "axios";
   const BASE_URL = "https://4d46-171-243-49-70.ngrok-free.app/";
-  const ACCESSTOKEN  =
-    "zIBBsoB18Egp1jk3XPVaxRmD0WQKnF";
   const AxioInstance = axios.create({ 
     baseURL: BASE_URL,
-    headers: {
-      Authorization: "Bearer " + ACCESSTOKEN,
-    },
   });
+  export const authApi = (accessToken) => axios.create({
+    baseURL: HOST,
+    headers: {
+        "Authorization": `Bearer ${accessToken}`
+    }
+})
   const getCategories = () => AxioInstance.get("categories/");
-  //////
   const getDoctors = () =>
     AxioInstance.get("doctors/");
-  const getDoctorsByCategory = (category) =>
-    AxioInstance.get(
-      "doctors?filters[categories][Name][$in]=" + category + "&populate=*"
-    );
+
+//////
   const createAppointment = (data) => AxioInstance.post("/appointments", data);
   const getAllDoctors = () => AxioInstance.get("doctors?populate=*");
   const getUserAppointments = (email) =>
@@ -45,7 +43,6 @@
   export default {
     getCategories,
     getDoctors,
-    getDoctorsByCategory,
     createAppointment,
     getAllDoctors,
     getUserAppointments,

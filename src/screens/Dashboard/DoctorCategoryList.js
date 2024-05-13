@@ -16,29 +16,30 @@ const DoctorCategoryList = () => {
     getDoctorsByCategory();
   }, []);
 
-  const getDoctorsByCategory = () => {
-    GlobalAPI.getDoctors().then((resp) => {
+  const getDoctorsByCategory = async () => {
+    try {
+      const resp = await GlobalAPI.getDoctors();
       const filteredDoctors = resp.data.results.filter(
         (doctor) => doctor.category === param?.categoryName
       );
       setDoctorList(filteredDoctors);
       setLoading(false);
-    }).catch((error) => {
+    } catch (error) {
       console.error("Lỗi khi lấy danh sách bác sĩ theo danh mục:", error);
       setLoading(false);
-    });
+    }
   };
+
   return (
     <View style={{ padding: 20 }}>
       <PageHeader title={param?.categoryName} />
       <DoctorTab />
-      {!doctorList?.length ? (
+      {loading ? (
         <ActivityIndicator size={"large"} color={Colors.primary} />
       ) : (
         <DoctorList doctorList={doctorList} />
       )}
     </View>
-  
   );
 };
 
