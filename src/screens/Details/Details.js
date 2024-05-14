@@ -7,13 +7,9 @@ import {
   Text,
   TouchableRipple,
 } from "react-native-paper";
-
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import styles from "./styles";
-import { useUser } from "@clerk/clerk-expo";
-
 const Details = () => {
-  const { isLoaded, isSignedIn, user } = useUser();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,7 +37,6 @@ const Details = () => {
           </View>
         </View>
       </View>
-
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Icon name="map-marker-radius" color="#3467E7" size={20} />
@@ -52,7 +47,6 @@ const Details = () => {
           <Icon name="phone" color="#3467E7" size={20} />
           <Text style={styles.userContact}>0349977194</Text>
         </View>
-
         <View style={styles.row}>
           <Icon name="email" color="#3467E7" size={20} />
           <Text style={styles.userContact}>trunghieu@email.com</Text>
@@ -77,7 +71,6 @@ const Details = () => {
         <View style={styles.spContainer}>
           <View style={styles.sp}></View>
         </View>
-
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="share-outline" color="#3467E7" size={25} />
@@ -106,7 +99,6 @@ const Details = () => {
         <View style={styles.spContainer}>
           <View style={styles.sp}></View>
         </View>
-
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="logout-variant" color="#3467E7" size={25} />
