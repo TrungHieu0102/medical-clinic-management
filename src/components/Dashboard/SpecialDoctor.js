@@ -1,7 +1,7 @@
 import { View, FlatList, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import SubHeading from "./SubHeading";
-import GlobalAPI from "../../services/GlobalAPI";
+import GlobalAPI, { endpoints } from "../../services/GlobalAPI";
 import DoctorItem from "./DoctorItem";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -12,13 +12,17 @@ const SpecialDoctor = () => {
 
   const getSpecialDoctors = async () => {
     try {
-      const resp = await GlobalAPI.getDoctors();
-      const filteredDoctors = resp.data.results.filter(
-        (doctor) => doctor.price > 100
-      );
-      setDoctorList(filteredDoctors);
+      const resp = await GlobalAPI.get(endpoints['doctors']);
+      if (resp && resp.data) {
+        const filteredDoctors = resp.data.results.filter(
+          (doctor) => doctor.price > 100
+        );
+        setDoctorList(filteredDoctors);
+      } else {
+        console.error("Response data is undefined");
+      }
     } catch (error) {
-      console.error("Error fetching special doctors:", error);
+      console.error("Error fetching doctors:", error);
     }
   };
 

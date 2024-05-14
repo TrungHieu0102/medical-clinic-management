@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import GlobalAPI from "../../services/GlobalAPI";
+import GlobalAPI, { endpoints } from "../../services/GlobalAPI";
 import SelectedMedicinesList from "../../components/Medicine/SelectedMedicinesList";
 import AddMedicineModal from "../../components/Medicine/AddMedicineModal";
 import PageHeader from "../../components/Shared/PageHeader";
@@ -14,10 +14,14 @@ const MedicineListScreen = () => {
 
   const fetchAllMedicines = async () => {
     try {
-      const response = await GlobalAPI.getAllMedicine();
-      setMedicines(response.data.results);
+      const resp = await GlobalAPI.get(endpoints['getAllMedicine']);
+      if (resp && resp.data) {
+        setMedicines(resp.data.results);
+      } else {
+        console.error("Response data is undefined");
+      }
     } catch (error) {
-      console.error("Lỗi khi lấy danh sách thuốc:", error);
+      console.error("Error fetching medicine:", error);
     }
   };
 

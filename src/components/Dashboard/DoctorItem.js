@@ -22,9 +22,9 @@ const DoctorItem = ({ doctor }) => {
           borderTopRightRadius: 10,
         }}
       />
-      <View>
+      <View style={{ padding: 10 }}>
         <Text style={{ fontFamily: "bold", fontSize: 16 }}>
-        {doctor.user.first_name} {doctor.user.last_name}
+          {doctor.user.first_name} {doctor.user.last_name}
         </Text>
         <Text
           style={{

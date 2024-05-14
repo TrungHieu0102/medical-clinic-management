@@ -1,6 +1,6 @@
 import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import GlobalAPI from "../../services/GlobalAPI";
+import GlobalAPI, { endpoints } from "../../services/GlobalAPI";
 import Colors from "../../assets/color/Colors";
 import SubHeading from "./SubHeading";
 import { useNavigation } from "@react-navigation/native";
@@ -15,7 +15,7 @@ const Categories = () => {
 
   const getCategories = async () => {
     try {
-      const resp = await GlobalAPI.getCategories();
+      const resp = await GlobalAPI.get(endpoints['categories']);
       if (resp && resp.data) {
         setCategoryList(resp.data.results);
       } else {
@@ -25,7 +25,6 @@ const Categories = () => {
       console.error("Error fetching categories:", error);
     }
   };
-
   if (!categoryList) {
     return null;
   }

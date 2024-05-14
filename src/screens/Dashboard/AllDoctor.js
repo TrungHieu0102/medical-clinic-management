@@ -1,6 +1,6 @@
 import { View, Text,ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
-import GlobalAPI from "../../services/GlobalAPI";
+import GlobalAPI, { endpoints } from "../../services/GlobalAPI";
 import PageHeader from "../../components/Shared/PageHeader";
 import DoctorList from "../../components/DoctorCategoryList/DoctorList";
 import DoctorTab from "../../components/DoctorCategoryList/DoctorTab";
@@ -11,10 +11,14 @@ const AllDoctor = () => {
   const [listAllDoctor, setListDoctor] = useState([]);
   const getListDoctor = async () => {
     try {
-      const response = await GlobalAPI.getDoctors();
-      setListDoctor(response.data.results);
+      const resp = await GlobalAPI.get(endpoints['doctors']);
+      if (resp && resp.data) {
+        setListDoctor(resp.data.results);
+      } else {
+        console.error("Response data is undefined");
+      }
     } catch (error) {
-      console.error("Lỗi khi lấy danh sách bác sĩ:", error);
+      console.error("Error fetching doctors:", error);
     }
   };
   useEffect(() => {
