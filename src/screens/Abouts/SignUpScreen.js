@@ -4,7 +4,6 @@ import { useSignUp } from "@clerk/clerk-expo";
 
 const SignUpScreen = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
-
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [emailAddress, setEmailAddress] = React.useState("");

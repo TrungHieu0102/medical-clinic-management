@@ -58,7 +58,7 @@ export default function Login() {
             className="flex-row justify-center"
           >
             <Text>Bạn chưa có tài khoản ? </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("SignUpScreen")}>
+            <TouchableOpacity onPress={() => navigation.navigate("DangNhap")}>
               <Text className="text-sky-600">Đăng ký</Text>
             </TouchableOpacity>
           </Animated.View>

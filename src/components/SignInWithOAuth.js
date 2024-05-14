@@ -25,7 +25,7 @@ const SignInWithOAuth = () => {
         // Use signIn or signUp for next steps such as MFA
       }
     } catch (err) {
-      console.error("OAuth error", err);
+      console.error("OAuth error", err.message);
     }
   }, []);
  

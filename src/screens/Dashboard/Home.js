@@ -11,7 +11,7 @@ const Home = ({ navigation }) => {
   return (
     <View style={{padding:20,marginTop: 20}}> 
         <Header/>
-        <SearchBar setSearchText={(value)=>console.log(value)} />
+        <SearchBar/>
         <Slider/>     
         <Categories/>
         <SpecialDoctor/>

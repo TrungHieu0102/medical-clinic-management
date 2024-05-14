@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import TabNavigator from "./src/routers/TabNavigator";
 import { useFonts } from "expo-font";
 import {
@@ -18,23 +18,23 @@ export default function App() {
     bold: require("../medical-clinic-management/src/assets/fonts/Roboto-Bold.ttf"),
     italic: require("../medical-clinic-management/src/assets/fonts/Roboto-Italic.ttf"),
   });
-  return (
-    <ClerkProvider publishableKey="pk_test_ZmxleGlibGUtam9leS02OS5jbGVyay5hY2NvdW50cy5kZXYk">
-      <SafeAreaView style={styles.container}>
-        {/* Signin successfully */}
-        <SignedIn>
-          <NavigationContainer>
-            <TabNavigator />
-          </NavigationContainer>
-        </SignedIn>
-        {/* SignOut */}
-        <SignedOut> 
-          <NavigationContainer>
-           <AboutNavigator/>
-          </NavigationContainer>
-        </SignedOut>
-      </SafeAreaView>
-    </ClerkProvider>
+  return ( 
+      <ClerkProvider publishableKey="pk_test_ZmxleGlibGUtam9leS02OS5jbGVyay5hY2NvdW50cy5kZXYk">
+        <SafeAreaView style={styles.container}>
+          {/* Signin successfully */}
+          <SignedIn>
+            <NavigationContainer>
+              <TabNavigator />
+            </NavigationContainer>
+          </SignedIn>
+          {/* SignOut */}
+          <SignedOut> 
+            <NavigationContainer>
+              <AboutNavigator/>
+            </NavigationContainer>
+          </SignedOut>
+        </SafeAreaView>
+      </ClerkProvider>
   );
 }
 
