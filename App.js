@@ -1,16 +1,12 @@
-import * as React from "react";
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import TabNavigator from "./src/routers/TabNavigator";
 import { useFonts } from "expo-font";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from "@clerk/clerk-react";
-import { ClerkProvider } from "@clerk/clerk-expo/dist";
-import Login from "./src/screens/Abouts/Login";
 import { NavigationContainer } from "@react-navigation/native";
+import MyUserReducer from "./src/services/MyUserReducer";
+import MyContext from "./src/services/MyContext";
+import React, { useReducer } from "react";
+import Login from "./src/screens/Abouts/Login";
+import AboutNavigator from "./src/routers/navigators/AboutNavigator";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -19,19 +15,19 @@ export default function App() {
     bold: require("../medical-clinic-management/src/assets/fonts/Roboto-Bold.ttf"),
     italic: require("../medical-clinic-management/src/assets/fonts/Roboto-Italic.ttf"),
   });
+  const [user, dispatch] = useReducer(MyUserReducer, null);
   return (
-    <ClerkProvider publishableKey="pk_test_ZmxleGlibGUtam9leS02OS5jbGVyay5hY2NvdW50cy5kZXYk">
+    <MyContext.Provider value={[user, dispatch]}>
       <SafeAreaView style={styles.container}>
-        <SignedIn>
-          <NavigationContainer>
-            <TabNavigator />
-          </NavigationContainer>
-        </SignedIn>
-        <SignedOut>
-          <Login />
-        </SignedOut>
+        <NavigationContainer>
+        {user===null?<>
+          <AboutNavigator/>
+      </>:<>
+       <TabNavigator/>
+      </>}
+        </NavigationContainer>
       </SafeAreaView>
-    </ClerkProvider>
+    </MyContext.Provider>
   );
 }
 
@@ -39,6 +35,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-  
   },
 });

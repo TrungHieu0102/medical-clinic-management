@@ -1,13 +1,7 @@
 import { View, Text, Image } from 'react-native'
 import React from 'react'
-import { useUser } from '@clerk/clerk-expo'
 import { Ionicons } from '@expo/vector-icons';
 export default function Header() {
-    const {isLoaded,isSignedIn,user}=useUser();
-    if(!isLoaded||!isSignedIn)
-    {
-        return null
-    }
   return (
     <View style={{display:'flex',flexDirection:'row',
     alignItems:'center',justifyContent:'space-between'}}>
@@ -17,7 +11,7 @@ export default function Header() {
             gap:7,
             alignItems:'center'
             }}>
-            <Image source={{uri:user.imageUrl}}
+            <Image source={{uri:"https://res.cloudinary.com/dpxa1i7nw/image/upload/v1/media/categories/2024/05/09/physiotherapy_10570311_aqamqb"}}
             style={{width:45,height:45,borderRadius:99}}
             />
             <View>
@@ -26,7 +20,7 @@ export default function Header() {
                     fontSize:18,
                     fontFamily:'bold',
                     }}>
-                {user.fullName}</Text>
+               Tên</Text>
 
             </View>
         </View>
