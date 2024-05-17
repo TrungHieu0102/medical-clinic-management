@@ -1,32 +1,46 @@
-import { View, Text, Image } from 'react-native'
-import React from 'react'
-import { Ionicons } from '@expo/vector-icons';
+import { View, Text, Image } from "react-native";
+import React, { useContext } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import MyContext from "../../services/MyContext";
 export default function Header() {
+  const [state] = useContext(MyContext);
+// console.log(state.data.groups[0].name)
+// console.log(state.data.patient.blood_group)
+// console.log(state.data.patient.phone_number)
   return (
-    <View style={{display:'flex',flexDirection:'row',
-    alignItems:'center',justifyContent:'space-between'}}>
-        <View style={{
-            display:'flex',
-            flexDirection:'row',
-            gap:7,
-            alignItems:'center'
-            }}>
-            <Image source={{uri:"https://res.cloudinary.com/dpxa1i7nw/image/upload/v1/media/categories/2024/05/09/physiotherapy_10570311_aqamqb"}}
-            style={{width:45,height:45,borderRadius:99}}
-            />
-            <View>
-                <Text style={{fontFamily:'regular'}}>Xin chào,👋 </Text>
-                <Text style={{
-                    fontSize:18,
-                    fontFamily:'bold',
-                    }}>
-               Tên</Text>
-
-            </View>
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: 7,
+          alignItems: "center",
+        }}
+      >
+        <Image
+          source={{ uri: state.data.avatar || "https://via.placeholder.com/45" }}
+          style={{ width: 45, height: 45, borderRadius: 99 }}
+        />
+        <View>
+          <Text style={{ fontFamily: "regular" }}>Xin chào,👋 </Text>
+          <Text
+            style={{
+              fontSize: 18,
+              fontFamily: "bold",
+            }}
+          >
+            {state.data.first_name}  {state.data.last_name} 
+          </Text>
         </View>
-        <Ionicons name="notifications-outline" 
-        size={28} 
-        color="black" />
+      </View>
+      <Ionicons name="notifications-outline" size={28} color="black" />
     </View>
-  )
+  );
 }

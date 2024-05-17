@@ -1,32 +1,54 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HorizontalLine from "../Shared/HorizontalLine";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import moment from "moment";
 import Colors from "../../assets/color/Colors";
+import GlobalAPI, { endpoints } from "../../services/GlobalAPI";
 
+export default function AppointmentCardItem({ appointment, doctorID }) {
+  const [doctor, setDoctor] = useState(null);
 
-export default function AppointmentCardItem({ appointment, deleteAppointment }) {
+  const getDoctor = async () => {
+    try {
+      const response = await GlobalAPI.get(endpoints.doctorDetail(doctorID));
+      if (response.data) {
+        // console.log(response.data);
+        setDoctor(response.data);
+      } else {
+        console.error("Response data is undefined");
+      }
+    } catch (error) {
+      console.error("Error fetching doctor:", error);
+    }
+  };
+  
+  useEffect(() => {
+    getDoctor();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.dateText}>
-        {moment(appointment.attributes.Date).format("DD/MM/YYYY")} - {appointment.attributes.Time}
+        {moment(appointment.date).format("DD/MM/YYYY")} - {" "}
+        {appointment.time}
       </Text>
       <HorizontalLine />
       <View style={styles.doctorInfoContainer}>
         <Image
           source={{
-            uri:appointment.attributes.Doctor.data.attributes.image.data[0].attributes.url
+            uri: doctor ? doctor.user.avatar : " ",
           }}
-          style={styles.doctorImage}  
+          style={styles.doctorImage}
         />
         <View>
           <Text style={styles.doctorName}>
-            {appointment.attributes.Doctor.data.attributes.Name}
+            {doctor ? `${doctor.user.first_name} ${doctor.user.last_name}` : ""}
           </Text>
+
           <View style={styles.infoText}>
             <Ionicons name="location" size={20} color={Colors.primary} />
-            <Text>{appointment.attributes.Doctor.data.attributes.Address}</Text>
+            <Text>{doctor ? doctor.location : ""}</Text>
           </View>
           <View style={styles.infoText}>
             <Ionicons name="document-text" size={20} color={Colors.primary} />
@@ -38,14 +60,23 @@ export default function AppointmentCardItem({ appointment, deleteAppointment }) 
               Trạng thái:{" "}
               <Text
                 style={{
-                  color: appointment.attributes.Confirmed ? Colors.primary : "#e73458",
+                  color:
+                    appointment.confirmed === "confirmed"
+                      ? Colors.primary
+                      : "#e73458",
                 }}
               >
-                {appointment.attributes.Confirmed ? "Đã xác nhận" : "Chưa xác nhận"}
+                {appointment.confirmed === "confirmed"
+                  ? "Đã xác nhận"
+                  : "Chưa xác nhận"}
               </Text>
             </Text>
           </View>
-          <TouchableOpacity onPress={() => deleteAppointment(appointment.id)} style={styles.actionButton}>
+          <TouchableOpacity
+            /* onPress={() => deleteAppointment(appointment.id)} */ style={
+              styles.actionButton
+            }
+          >
             <Text style={styles.actionButtonText}>Hủy lịch khám</Text>
           </TouchableOpacity>
         </View>
@@ -53,7 +84,8 @@ export default function AppointmentCardItem({ appointment, deleteAppointment }) 
     </View>
   );
 }
- const styles =StyleSheet.create ( {
+
+const styles = StyleSheet.create({
   container: {
     padding: 10,
     borderWidth: 1,
@@ -105,4 +137,4 @@ export default function AppointmentCardItem({ appointment, deleteAppointment }) 
     fontFamily: "medium",
     fontSize: 16,
   },
-})
+});

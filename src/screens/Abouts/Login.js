@@ -6,56 +6,64 @@ import {
   TouchableOpacity,
   Button,
   ActivityIndicator,
-  
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import FormData from 'form-data'; // Import FormData
-
+import FormData from "form-data"; // Import FormData
+import { ToastAndroid } from "react-native";
 import React, { useContext, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
-import { useNavigation } from "@react-navigation/native";
 import MyContext from "../../services/MyContext";
 import GlobalAPI, { authApi, endpoints } from "../../services/GlobalAPI";
 
 export default function Login({ navigation }) {
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUsername] = useState("hieuadmin@gmail.com");
+  const [password, setPassword] = useState("admin");
   const [user, dispatch] = useContext(MyContext);
   const [loading, setLoading] = useState();
   const login = async () => {
     setLoading(true);
     try {
       const data = new FormData();
-      data.append('client_id', '3H0hKI5zlzPzdOkcZLregQMGIaR3iuGjzZEFmvjY');
-      data.append('client_secret', 'Nw5fUj7fXSNp2Oq9r5Bwsgy4HPF5ix6bqpzytOn6jmskQRXnqYpwSdmsyuEinPq6sTmtZzinWKDEjr0bfELasv1e1vMXEt2q9QnxsfMMXpj8wIi6so4Lh9poJixkUNqo');
-      data.append('username', username);
-      data.append('password', password);
-      data.append('grant_type', "password");
+      data.append("client_id", "fkOreP4XDeIg4dvcA4rXjoKmYquJ2XvQ68jaQaGk");
+      data.append(
+        "client_secret",
+        "7rIwvHi6XUu6jmeL955wMnMDcEzWPQ6ehhZ0R4rrRqEBWC5zBo1ZqWpspi4SxD79xleQr1DfY91Gbhxcy16Fu7eeM3oJdq2ewcSvnIJdlh9OC2S1FbROlvD2HkJRXHdb"
+      );
+      data.append("username", username);
+      data.append("password", password);
+      data.append("grant_type", "password");
 
-      let res = await GlobalAPI.post(endpoints['login'], data, {
+      let res = await GlobalAPI.post(endpoints["login"], data, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        }
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      console.info(res.data);
+      // console.info(res.data);
 
       await AsyncStorage.setItem("access_token", res.data.access_token);
       let user = await authApi(res.data.access_token).get(
         endpoints["current_user"]
       );
-      console.info(user.data);
-      
+      //  console.info(user.data);
+
       dispatch({
         type: "login",
         payload: {
-          username: "ssssd23fsess@gmail.com",
+          data: user.data
         },
       });
-      navigation.navigate("TrangChu");
     } catch (error) {
-      console.error('Error:', error);
+      if (error.response && error.response.status === 400) {
+        console.log(error.response)
+        ToastAndroid.show(
+          "Tên đăng nhập hoặc mật khẩu không chính xác",
+          ToastAndroid.SHORT
+        );
+      } else {
+        console.log(error.response);
+      }
     } finally {
       setLoading(false);
     }
@@ -125,6 +133,15 @@ export default function Login({ navigation }) {
             <Text>Bạn chưa có tài khoản ? </Text>
             <TouchableOpacity onPress={() => navigation.navigate("Register")}>
               <Text className="text-sky-600">Đăng ký</Text>
+            </TouchableOpacity>
+          </Animated.View>
+          <Animated.View
+            entering={FadeInDown.duration(1000).delay(600).springify()}
+            className="flex-row justify-center"
+          >
+            <Text>Quên mật khẩu ? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("ResetPassword")}>
+              <Text className="text-sky-600">Lấy lại mật khẩu</Text>
             </TouchableOpacity>
           </Animated.View>
         </View>

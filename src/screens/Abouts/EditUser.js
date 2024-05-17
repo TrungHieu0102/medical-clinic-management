@@ -7,39 +7,45 @@ import {
   TextInput,
   Modal,
 } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import React, { useState } from "react";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { imagesDataURL } from "../../assets/constants/data";
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
 import styles from "./styles";
+import { useNavigation } from "@react-navigation/native";
+import MyContext from "../../services/MyContext";
 
+const EditUser = () => {
+  const navigation = useNavigation();
+  const [state, dispatch] = useContext(MyContext);
 
-const EditUser = ({ navigation }) => {
-  const [selectedImage, setSelectedImage] = useState(imagesDataURL[0]);
-  const [name, setName] = useState("Hà Trung Hiếu");
-  const [email, setEmail] = useState("trunghieu@gmail.com");
-  const [password, setPassword] = useState("randompassword");
-  const [country, setCountry] = useState("Việt Nam");
-  const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-  const today = new Date();
-  const startDate = getFormatedDate(
-    today.setDate(today.getDate() + 1),
-    "DD/MM/YYYY"
+  // Initialize state with default values
+  const [selectedImage, setSelectedImage] = useState(state.data.avatar);
+  const [firstName, setFirstName] = useState(state.data.first_name );
+  const [lastName, setLastName] = useState(state.data.last_name );
+  const [email, setEmail] = useState(state.data.email );
+  const [password, setPassword] = useState(state.data.password );
+  const [country, setCountry] = useState(state.data.patient.address);
+  const [openStartDatePicker, setOpenStartDatePicker] = useState(state.data.patient.date_of_birth);
+  const [selectedStartDate, setSelectedStartDate] = useState(
+    state.birthdate || "01/01/1990"
   );
-  const [selectedStartDate, setSelectedStartDate] = useState("01/01/1990");
-  const [startedDate, setStartedDate] = useState("12/12/2023");
+  const [startedDate, setStartedDate] = useState(
+    getFormatedDate(new Date(), "DD/MM/YYYY")
+  );
 
   const handleChangeStartDate = (propDate) => {
     setStartedDate(propDate);
+    setSelectedStartDate(propDate);
   };
 
   const handleOnPressStartDate = () => {
     setOpenStartDatePicker(!openStartDatePicker);
   };
-  
+
   const handleImageSelection = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -47,63 +53,68 @@ const EditUser = ({ navigation }) => {
       aspect: [4, 4],
       quality: 1,
     });
-    console.log(result);
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
     }
   };
 
-  function renderDatePicker() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={openStartDatePicker}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <DatePicker
-              mode="calendar"
-              selected={startedDate}
-              onDateChanged={handleChangeStartDate}
-              onSelectedChange={(date) => setSelectedStartDate(date)}
-              options={{
-                backgroundColor: "#3d85c6",
-                textHeaderColor: "#FFFFFF",
-                textDefaultColor: "#FFFFFF",
-                selectedTextColor: "#3d85c6",
-                mainColor: "#FFFFFF",
-                textSecondaryColor: "#FFFFFF",
-                borderColor: "rgba(122, 146, 165, 0.1)",
-              }}
-            />
-            <TouchableOpacity onPress={handleOnPressStartDate}>
-              <Text style={{ color: "white" }}>Lưu</Text>
-            </TouchableOpacity>
-          </View>
+  const handleSave = async () => {
+    const updatedUser = {
+      firstName,
+      lastName,
+      email,
+      password,
+      country,
+      birthdate: selectedStartDate,
+      avatar: selectedImage,
+    };
+
+    try {
+      // Assume updateUser is a function that sends the updated user data to the server
+      await updateUser(updatedUser);
+      // Update the context or navigate away if needed
+      dispatch({ type: "UPDATE_USER", payload: updatedUser });
+      navigation.goBack();
+    } catch (error) {
+      console.error("Failed to update user:", error);
+    }
+  };
+
+  const renderDatePicker = () => (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={openStartDatePicker}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <DatePicker
+            mode="calendar"
+            selected={startedDate}
+            onDateChanged={handleChangeStartDate}
+            onSelectedChange={(date) => setSelectedStartDate(date)}
+            options={{
+              backgroundColor: "#3d85c6",
+              textHeaderColor: "#FFFFFF",
+              textDefaultColor: "#FFFFFF",
+              selectedTextColor: "#3d85c6",
+              mainColor: "#FFFFFF",
+              textSecondaryColor: "#FFFFFF",
+              borderColor: "rgba(122, 146, 165, 0.1)",
+            }}
+          />
+          <TouchableOpacity onPress={handleOnPressStartDate}>
+            <Text style={{ color: "white" }}>Lưu</Text>
+          </TouchableOpacity>
         </View>
-      </Modal>
-    );
-  }
+      </View>
+    </Modal>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          marginHorizontal: 12,
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      ></View>
-
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
-        <View
-          style={{
-            alignItems: "center",
-            marginVertical: 22,
-          }}
-        >
-          {/* avatar */}
-
+        <View style={{ alignItems: "center", marginVertical: 22 }}>
           <TouchableOpacity onPress={handleImageSelection}>
             <Image
               source={{ uri: selectedImage }}
@@ -128,32 +139,39 @@ const EditUser = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/* user infor */}
-
         <View style={{ marginVertical: 20 }}>
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.label}>Họ và tên</Text>
+            <Text style={styles.label}>First Name</Text>
             <View style={styles.inputContainer}>
-            <Icon
-                name="account-outline"
-                style={styles.icon}
-              />
+              <Icon name="account-outline" style={styles.icon} />
               <TextInput
                 style={styles.textInput}
-                value={name}
-                onChangeText={(value) => setName(value)}
+                value={firstName}
+                onChangeText={(value) => setFirstName(value)}
                 editable={true}
               />
             </View>
           </View>
 
+
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.label}>Last Name</Text>
+            <View style={styles.inputContainer}>
+              <Icon name="account-outline" style={styles.icon} />
+              <TextInput
+                style={styles.textInput}
+                value={lastName}
+                onChangeText={(value) => setLastName(value)}
+                editable={true}
+              />
+            </View>
+          </View>
+          
+
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.label}>Email</Text>
             <View style={styles.inputContainer}>
-            <Icon
-                name="email-outline"
-                style={styles.icon}
-              />
+              <Icon name="email-outline" style={styles.icon} />
               <TextInput
                 style={styles.textInput}
                 value={email}
@@ -164,12 +182,9 @@ const EditUser = ({ navigation }) => {
           </View>
 
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.label}>Mật khẩu</Text>           
+            <Text style={styles.label}>Mật khẩu</Text>
             <View style={styles.inputContainer}>
-            <Icon
-                name="lock-outline"
-                style={styles.icon}
-              />
+              <Icon name="lock-outline" style={styles.icon} />
               <TextInput
                 style={styles.textInput}
                 value={password}
@@ -181,12 +196,9 @@ const EditUser = ({ navigation }) => {
           </View>
 
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.label}>Ngày sinh</Text>          
+            <Text style={styles.label}>Ngày sinh</Text>
             <View style={styles.inputContainer}>
-            <Icon
-                name="calendar"
-                style={styles.icon}
-              />
+              <Icon name="calendar" style={styles.icon} />
               <TouchableOpacity onPress={handleOnPressStartDate}>
                 <Text style={styles.dateTextInput}>{selectedStartDate}</Text>
               </TouchableOpacity>
@@ -196,10 +208,7 @@ const EditUser = ({ navigation }) => {
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.label}>Địa chỉ</Text>
             <View style={styles.inputContainer}>
-              <Icon
-                name="folder-home"
-                style={styles.icon}
-              />
+              <Icon name="folder-home" style={styles.icon} />
               <TextInput
                 style={styles.textInput}
                 value={country}
@@ -209,11 +218,13 @@ const EditUser = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.button}>
+
+        <TouchableOpacity style={styles.button} onPress={handleSave}>
           <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
             Lưu
           </Text>
         </TouchableOpacity>
+
         {renderDatePicker()}
       </ScrollView>
     </SafeAreaView>

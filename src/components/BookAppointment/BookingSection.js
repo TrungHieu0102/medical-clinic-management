@@ -11,11 +11,9 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import Colors from "../../assets/color/Colors";
 import SubHeading from "../Dashboard/SubHeading";
-import GlobalAPI from "../../services/GlobalAPI";
-import { useUser } from "@clerk/clerk-expo";
+import GlobalAPI, { endpoints } from "../../services/GlobalAPI";
 
 const BookingSection = ({doctor}) => {
-  const { isLoaded, isSignedIn, user } = useUser();
   const [next7Days, setNext7Days] = useState([]);
   const [selectedDate, setSelectedDate] = useState();
   const [timeList, setTimeList] = useState([]);
@@ -65,17 +63,14 @@ const BookingSection = ({doctor}) => {
   const bookAppointment = () => {
     setLoader(true);
     const data = {
-      data: {
-        Username: user.fullName,
-        Email: user.primaryEmailAddress.emailAddress,
-        Date: selectedDate,
-        Time: selectedTime,      
-        Doctor: doctor.id,
-        Note: notes,
-      },
+      date: moment(selectedDate).format("YYYY-MM-DD"),
+      time: moment(selectedTime, "hh:mm A").format("HH:mm:ss"),
+      doctor: doctor.id
     };
-
-    GlobalAPI.createAppointment(data).then(
+  
+    console.log(data); // Log dữ liệu đã gửi lên
+  
+    GlobalAPI.post(endpoints.bookAppointment(), data).then(
       (resp) => {
         console.log(resp);
         setLoader(false);
@@ -90,6 +85,7 @@ const BookingSection = ({doctor}) => {
       }
     );
   };
+  
   return (
     <View>
       <Text

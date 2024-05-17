@@ -13,7 +13,6 @@ const DoctorDetail = () => {
   useEffect(() => {
     if (route.params ) {
       setDoctor(route.params.doctor);
-      
     }
   }, [route.params]);
 
