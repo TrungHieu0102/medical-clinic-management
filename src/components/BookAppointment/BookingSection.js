@@ -6,12 +6,13 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
-  } from "react-native";
+  ToastAndroid  } from "react-native";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import Colors from "../../assets/color/Colors";
 import SubHeading from "../Dashboard/SubHeading";
-import GlobalAPI, { endpoints } from "../../services/GlobalAPI";
+import GlobalAPI, { authApi, endpoints } from "../../services/GlobalAPI";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const BookingSection = ({doctor}) => {
   const [next7Days, setNext7Days] = useState([]);
@@ -29,7 +30,7 @@ const BookingSection = ({doctor}) => {
     const nextSevenDays = [];
     //lịch khám chỉ bắt đầu vào ngày hôm sau
     //chỉnh moment về tiếng việt để đồng nhất
-    for (let i = 1; i < 8; i++) {
+    for (let i = 0; i < 8; i++) {
       const date = moment().add(i, "days");
       nextSevenDays.push({
         date: date,
@@ -60,31 +61,24 @@ const BookingSection = ({doctor}) => {
 
     setTimeList(timeList);
   };
-  const bookAppointment = () => {
+  const bookAppointment = async () => {
     setLoader(true);
     const data = {
       date: moment(selectedDate).format("YYYY-MM-DD"),
       time: moment(selectedTime, "hh:mm A").format("HH:mm:ss"),
-      doctor: doctor.id
     };
-  
     console.log(data); 
-  
-    GlobalAPI.post(endpoints.bookAppointment(), data).then(
-      (resp) => {
-        console.log(resp);
-        setLoader(false);
-        // Toast.show(
-        //   "Đăng ký lịch khám thành công !",
-        //   Toast.LONG
-        // );
-      },
-      (error) => {
-        console.log(error)
-        setLoader(false);
-      }
-    );
+    try {
+      const access_token = await AsyncStorage.getItem('access_token');
+      const resp = await authApi(access_token).post(endpoints.bookAppointment(doctor.id), data);
+      ToastAndroid.show('Đăng ký lịch khám thành công !', ToastAndroid.SHORT);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoader(false);
+    }
   };
+  
   
   return (
     <View>
