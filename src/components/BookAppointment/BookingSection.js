@@ -67,11 +67,10 @@ const BookingSection = ({doctor}) => {
       date: moment(selectedDate).format("YYYY-MM-DD"),
       time: moment(selectedTime, "hh:mm A").format("HH:mm:ss"),
     };
-    console.log(data); 
     try {
       const access_token = await AsyncStorage.getItem('access_token');
       const resp = await authApi(access_token).post(endpoints.bookAppointment(doctor.id), data);
-      ToastAndroid.show('Đăng ký lịch khám thành công !', ToastAndroid.SHORT);
+      ToastAndroid.show('Đăng ký lịch khám thành công !', ToastAndroid.LONG);
     } catch (error) {
       console.log(error);
     } finally {

@@ -17,7 +17,6 @@ const MedicineListScreen = () => {
       const resp = await GlobalAPI.get(endpoints['getAllMedicine']);
       if (resp && resp.data) {
         setMedicines(resp.data);
-        console.log(resp.data)
       } else {
         console.error("Response data is undefined");
       }

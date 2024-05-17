@@ -12,6 +12,7 @@ export const endpoints = {
   current_user: "users/current-user/",
   appointments: "appointments/",
   bookAppointment: (doctorID) => `doctors/${doctorID}/appointment/`,
+  deleteAppointment: (id) => `appointments/${id}/`,
   updateInfor :"users/update-infor/",
   forgotPassword :"users/forgot-password",
 };

@@ -24,7 +24,6 @@ const ConfirmAppointmentScreen = ({ route }) => {
         } 
         
         const response = await authApi(accessToken).get(endpoints.appointments);
-        // console.log('Appointments data:', response.data.results);
         setAppointments(response.data.results);
       } catch (error) {
         console.error('Error fetching appointments:', error);

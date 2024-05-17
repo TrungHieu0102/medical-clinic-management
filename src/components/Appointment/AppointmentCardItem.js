@@ -1,10 +1,11 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet, ToastAndroid } from "react-native";
 import React, { useEffect, useState } from "react";
 import HorizontalLine from "../Shared/HorizontalLine";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import moment from "moment";
 import Colors from "../../assets/color/Colors";
-import GlobalAPI, { endpoints } from "../../services/GlobalAPI";
+import GlobalAPI, { authApi, endpoints } from "../../services/GlobalAPI";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AppointmentCardItem({ appointment, doctorID }) {
   const [doctor, setDoctor] = useState(null);
@@ -13,7 +14,6 @@ export default function AppointmentCardItem({ appointment, doctorID }) {
     try {
       const response = await GlobalAPI.get(endpoints.doctorDetail(doctorID));
       if (response.data) {
-        console.log(response.data);
         setDoctor(response.data);
       } else {
         console.error("Response data is undefined");
@@ -26,7 +26,15 @@ export default function AppointmentCardItem({ appointment, doctorID }) {
   useEffect(() => {
     getDoctor();
   }, []);
-
+  const deleteAppointment = async (id) => {
+    try {
+      const access_token = await AsyncStorage.getItem('access_token');
+      const resp = await authApi(access_token).delete(endpoints.deleteAppointment(id));
+      ToastAndroid.show('Xóa thành công !', ToastAndroid.LONG);
+    } catch (error) {
+      console.log(error);
+    } 
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.dateText}>
@@ -68,7 +76,7 @@ export default function AppointmentCardItem({ appointment, doctorID }) {
             </Text>
           </View>
           <TouchableOpacity
-            /* onPress={() => deleteAppointment(appointment.id)} */ style={
+           onPress={() => deleteAppointment(appointment.id)}  style={
               styles.actionButton
             }
           >
