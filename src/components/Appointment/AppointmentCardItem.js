@@ -13,7 +13,7 @@ export default function AppointmentCardItem({ appointment, doctorID }) {
     try {
       const response = await GlobalAPI.get(endpoints.doctorDetail(doctorID));
       if (response.data) {
-        // console.log(response.data);
+        console.log(response.data);
         setDoctor(response.data);
       } else {
         console.error("Response data is undefined");
@@ -22,7 +22,7 @@ export default function AppointmentCardItem({ appointment, doctorID }) {
       console.error("Error fetching doctor:", error);
     }
   };
-  
+
   useEffect(() => {
     getDoctor();
   }, []);
@@ -30,8 +30,7 @@ export default function AppointmentCardItem({ appointment, doctorID }) {
   return (
     <View style={styles.container}>
       <Text style={styles.dateText}>
-        {moment(appointment.date).format("DD/MM/YYYY")} - {" "}
-        {appointment.time}
+        {moment(appointment.date).format("DD/MM/YYYY")} - {appointment.time}
       </Text>
       <HorizontalLine />
       <View style={styles.doctorInfoContainer}>
@@ -61,14 +60,10 @@ export default function AppointmentCardItem({ appointment, doctorID }) {
               <Text
                 style={{
                   color:
-                    appointment.confirmed === "confirmed"
-                      ? Colors.primary
-                      : "#e73458",
+                    appointment.active === true ? Colors.primary : "#e73458",
                 }}
               >
-                {appointment.confirmed === "confirmed"
-                  ? "Đã xác nhận"
-                  : "Chưa xác nhận"}
+                {appointment.active === true ? "Đã xác nhận" : "Chưa xác nhận"}
               </Text>
             </Text>
           </View>

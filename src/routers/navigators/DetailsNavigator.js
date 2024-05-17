@@ -56,7 +56,7 @@ const DetailsNavigator = ({ navigation }) => {
        <DetailStack.Screen
         name="ConfirmAppointmentScreen"
         options={{
-          title: 'Kê đơn thuốc',
+          title:'Danh sách cuộc hẹn cần xác nhận',
         }}
         component={ConfirmAppointmentScreen}
       />

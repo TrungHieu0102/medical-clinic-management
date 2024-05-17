@@ -17,18 +17,18 @@ import MyContext from "../../services/MyContext";
 import GlobalAPI, { authApi, endpoints } from "../../services/GlobalAPI";
 
 export default function Login({ navigation }) {
-  const [username, setUsername] = useState("hieuadmin@gmail.com");
-  const [password, setPassword] = useState("admin");
+  const [username, setUsername] = useState("trunghieu3@gmail.com");
+  const [password, setPassword] = useState("Admin@123$");
   const [user, dispatch] = useContext(MyContext);
   const [loading, setLoading] = useState();
   const login = async () => {
     setLoading(true);
     try {
       const data = new FormData();
-      data.append("client_id", "fkOreP4XDeIg4dvcA4rXjoKmYquJ2XvQ68jaQaGk");
+      data.append("client_id", "wO5jz0Es3C7Z30XS2XiaJi7XMWDvzEezK9qOYkkF");
       data.append(
         "client_secret",
-        "7rIwvHi6XUu6jmeL955wMnMDcEzWPQ6ehhZ0R4rrRqEBWC5zBo1ZqWpspi4SxD79xleQr1DfY91Gbhxcy16Fu7eeM3oJdq2ewcSvnIJdlh9OC2S1FbROlvD2HkJRXHdb"
+        "NuMy84C8JR57DTeevWHLwfYpD2QNmg4MPYtbHClGgrCL40SabRTB7aKorYE46SfcCbgg96GfySK2sUsi0qd5ExaJBoa3N1ijl7NTBauIbFj1kc010tMjQpNm0XXFMNuJ"
       );
       data.append("username", username);
       data.append("password", password);
@@ -40,13 +40,12 @@ export default function Login({ navigation }) {
         },
       });
 
-      // console.info(res.data);
+       console.info(res.data);
 
       await AsyncStorage.setItem("access_token", res.data.access_token);
       let user = await authApi(res.data.access_token).get(
         endpoints["current_user"]
       );
-      //  console.info(user.data);
 
       dispatch({
         type: "login",
@@ -54,6 +53,8 @@ export default function Login({ navigation }) {
           data: user.data
         },
       });
+      console.info(user.data);
+
     } catch (error) {
       if (error.response && error.response.status === 400) {
         console.log(error.response)

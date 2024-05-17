@@ -1,13 +1,12 @@
 import {
   ActivityIndicator,
-  Dimensions,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
   Modal,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from "react-native";
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
 import React, { useState } from "react";
@@ -17,16 +16,23 @@ import { Picker } from "@react-native-picker/picker";
 import moment from "moment";
 import Colors from "../../assets/color/Colors";
 import FormItem from "../../components/About/FormItem";
-const { width } = Dimensions.get("window");
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
+const validateEmail = (email) => {
+  const re = /\S+@\S+\.\S+/;
+  return re.test(email);
+};
+
+const validatePhoneNumber = (phoneNumber) => {
+  const re = /(84|0[3|5|7|8|9])+([0-9]{8})\b/;
+  return re.test(phoneNumber);
+};
 
 const Register = ({ navigation }) => {
   const [user, setUser] = useState({
     avatar: "",
     email: "",
     first_name: "",
-    "groups[0].name": "Patient",
     last_name: "",
     password: "",
     patient: {
@@ -41,9 +47,18 @@ const Register = ({ navigation }) => {
 
   const [loading, setLoading] = useState(false);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    phone_number: "",
+    confirmPassword: "",
+  });
 
   const change = (field, value) => {
-    if (field.startsWith("patient.")) {
+    if (field === "confirmPassword") {
+      setUser((current) => ({ ...current, confirmPassword: value }));
+      validateField("confirmPassword", value);
+    } else if (field.startsWith("patient.")) {
       const patientField = field.split(".")[1];
       setUser((current) => ({
         ...current,
@@ -52,24 +67,64 @@ const Register = ({ navigation }) => {
           [patientField]: value,
         },
       }));
+      validateField(patientField, value);
     } else {
       setUser((current) => ({ ...current, [field]: value }));
+      validateField(field, value);
     }
   };
 
-  const picker = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      alert("Permission denied!");
-    } else {
-      const res = await ImagePicker.launchImageLibraryAsync();
-      if (!res.canceled) {
-        change("avatar", res.assets[0]);
-      }
+  const validateField = (field, value) => {
+    switch (field) {
+      case "email":
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: validateEmail(value) ? "" : "Địa chỉ email không hợp lệ",
+        }));
+        break;
+      case "password":
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          password: value.length >= 8 ? "" : "Mật khẩu phải có ít nhất 8 ký tự",
+        }));
+        break;
+      case "phone_number":
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          phone_number:
+            validatePhoneNumber(value) || value === ""
+              ? ""
+              : "Số điện thoại không hợp lệ",
+        }));
+        break;
+      case "confirmPassword":
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          confirmPassword: value === user.password ? "" : "Mật khẩu không khớp",
+        }));
+        break;
+      default:
+        break;
     }
   };
-
+  const validateConfirmPassword = (value) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      confirmPassword: value === user.password ? "" : "Mật khẩu không khớp",
+    }));
+  };
   const register = async () => {
+    if (
+      user.password.length < 8 ||
+      !validateEmail(user.email) ||
+      !validatePhoneNumber(user.patient.phone_number)
+    ) {
+      Alert.alert("Thông báo", "Vui lòng kiểm tra lại thông tin nhập vào!", [
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]);
+      return;
+    }
+
     setLoading(true);
     try {
       let form = new FormData();
@@ -142,7 +197,7 @@ const Register = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
         <View style={{ alignItems: "center", marginVertical: 80 }}>
-          <Text style={{fontSize: 30, fontFamily:"bold"}}>Đăng ký</Text>
+          <Text style={{ fontSize: 30, fontFamily: "bold" }}>Đăng ký</Text>
           <View
             style={{
               position: "absolute",
@@ -170,6 +225,13 @@ const Register = ({ navigation }) => {
               placeholder={user.last_name}
               iconName="account-outline"
             />
+               <FormItem
+              label="Tên đăng nhập"
+              value={user.username}
+              onChangeText={(value) => change("username", value)}
+              placeholder={user.username}
+              iconName="account-outline"
+            />
             <FormItem
               label="Mật khẩu"
               value={user.password}
@@ -177,21 +239,28 @@ const Register = ({ navigation }) => {
               placeholder={user.password}
               iconName="account-outline"
               secureTextEntry={true}
+              error={errors.password}
             />
-
             <FormItem
-              label="Tên đăng nhập"
-              value={user.username}
-              onChangeText={(value) => change("username", value)}
-              placeholder={user.username}
+              label="Nhập lại mật khẩu"
+              value={user.confirmPassword}
+              onChangeText={(value) => {
+                change("confirmPassword", value);
+                validateConfirmPassword(value); // Thực hiện validate khi thay đổi
+              }}
+              placeholder={user.confirmPassword}
               iconName="account-outline"
+              secureTextEntry={true}
+              error={errors.confirmPassword} // Truyền thông báo lỗi vào prop error
             />
-             <FormItem
+         
+            <FormItem
               label="Email"
               value={user.email}
               onChangeText={(value) => change("email", value)}
               placeholder={user.email}
               iconName="account-outline"
+              error={errors.email}
             />
             <FormItem
               label="Địa chỉ"
@@ -200,29 +269,28 @@ const Register = ({ navigation }) => {
               placeholder={user.patient.address}
               iconName="account-outline"
             />
-             <View style={{ marginBottom: 20 }}>
-            <Text style={styles.label}>Ngày sinh</Text>
-            <View style={styles.inputContainer}>
-              <Icon name="calendar" style={styles.icon} />
-              <TouchableOpacity onPress={handleOnPressStartDate}>
-              <Text style={styles.dateTextInput}>
-                {user.patient.date_of_birth || "Chọn ngày sinh"}
-              </Text>
-            </TouchableOpacity>
+            <View style={{ marginBottom: 20 }}>
+              <Text style={styles.label}>Ngày sinh</Text>
+              <View style={styles.inputContainer}>
+                <Icon name="calendar" style={styles.icon} />
+                <TouchableOpacity onPress={handleOnPressStartDate}>
+                  <Text style={styles.dateTextInput}>
+                    {user.patient.date_of_birth || "Chọn ngày sinh"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-            
+
             <FormItem
               label="Số điện thoại"
               value={user.patient.phone_number}
-              onChangeText={(value) =>
-                change("user.patient.phone_number", value)
-              }
+              onChangeText={(value) => change("patient.phone_number", value)}
               placeholder={user.patient.phone_number}
               iconName="account-outline"
+              error={errors.phone_number}
             />
             <Text style={styles.label}>Giới tính</Text>
-            
+
             <Picker
               selectedValue={user.patient.gender}
               style={styles.picker}
@@ -232,7 +300,7 @@ const Register = ({ navigation }) => {
               <Picker.Item label="Nữ" value="female" />
             </Picker>
 
-            <Text style={styles.label} >Nhóm máu</Text>
+            <Text style={styles.label}>Nhóm máu</Text>
             <Picker
               selectedValue={user.patient.blood_group}
               style={styles.picker}
@@ -247,7 +315,11 @@ const Register = ({ navigation }) => {
             </Picker>
 
             <TouchableOpacity onPress={register} style={styles.button}>
-              <Text style={{color:"white", fontFamily:"bold", fontSize: 20}} >Đăng ký</Text>
+              <Text
+                style={{ color: "white", fontFamily: "bold", fontSize: 20 }}
+              >
+                Đăng ký
+              </Text>
             </TouchableOpacity>
             {renderDatePicker()}
           </>
@@ -322,6 +394,15 @@ const styles = {
     fontSize: 22,
     marginRight: 10,
     marginTop: "5%",
+  },
+  picker: {
+    height: 50,
+    width: "100%",
+    marginBottom: 20,
+    borderRadius: 10,
+    backgroundColor: "#F3F4FB",
+    borderWidth: 0.5,
+    borderColor: Colors.primary,
   },
 };
 

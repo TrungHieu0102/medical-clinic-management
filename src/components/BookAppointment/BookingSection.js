@@ -68,7 +68,7 @@ const BookingSection = ({doctor}) => {
       doctor: doctor.id
     };
   
-    console.log(data); // Log dữ liệu đã gửi lên
+    console.log(data); 
   
     GlobalAPI.post(endpoints.bookAppointment(), data).then(
       (resp) => {
