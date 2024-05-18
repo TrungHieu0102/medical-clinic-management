@@ -82,12 +82,9 @@ const AllDoctor = () => {
   };
 
   const handleSortCriteria = (criteria) => {
-    // Kiểm tra xem tiêu chí hiện tại có phải là tiêu chí hiện tại không
     if (sortCriteria === criteria) {
-      // Nếu là tiêu chí hiện tại, đảo hướng sắp xếp
       setSortDirection(sortDirection === "desc" ? "asc" : "desc");
     } else {
-      // Nếu không phải, sử dụng tiêu chí mới và đặt hướng sắp xếp là giảm dần
       setSortCriteria(criteria);
       setSortDirection("desc");
     }
@@ -155,7 +152,9 @@ const AllDoctor = () => {
       {loading ? (
         <ActivityIndicator size={"large"} color={Colors.primary} />
       ) : (
-        <DoctorList doctorList={listAllDoctor} />
+        <View style={{ marginTop: 10 }}>
+          <DoctorList doctorList={listAllDoctor} />
+        </View>
       )}
 
       {/* Modal */}

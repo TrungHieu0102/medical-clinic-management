@@ -17,8 +17,8 @@ import MyContext from "../../services/MyContext";
 import GlobalAPI, { authApi, endpoints } from "../../services/GlobalAPI";
 
 export default function Login({ navigation }) {
-  const [username, setUsername] = useState("trunghieu3@gmail.com");
-  const [password, setPassword] = useState("Admin@123$");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [user, dispatch] = useContext(MyContext);
   const [loading, setLoading] = useState();
   const login = async () => {
@@ -40,8 +40,6 @@ export default function Login({ navigation }) {
         },
       });
 
-       console.info(res.data);
-
       await AsyncStorage.setItem("access_token", res.data.access_token);
       let user = await authApi(res.data.access_token).get(
         endpoints["current_user"]
@@ -53,7 +51,6 @@ export default function Login({ navigation }) {
           data: user.data
         },
       });
-      console.info(user.data);
 
     } catch (error) {
       if (error.response && error.response.status === 400) {
