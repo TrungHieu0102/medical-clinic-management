@@ -6,107 +6,147 @@ import {
   Text,
   TextInput,
   Modal,
+  Alert,
 } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import React, { useState } from "react";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
-import { imagesDataURL } from "../../assets/constants/data";
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
 import styles from "./styles";
+import { useNavigation } from "@react-navigation/native";
+import MyContext from "../../services/MyContext";
+import { Picker } from "@react-native-picker/picker";
+import Colors from "../../assets/color/Colors";
+import moment from "moment";
+import GlobalAPI, { authApi, endpoints } from "../../services/GlobalAPI";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-const EditUser = ({ navigation }) => {
-  const [selectedImage, setSelectedImage] = useState(imagesDataURL[0]);
-  const [name, setName] = useState("Hà Trung Hiếu");
-  const [email, setEmail] = useState("trunghieu@gmail.com");
-  const [password, setPassword] = useState("randompassword");
-  const [country, setCountry] = useState("Việt Nam");
+const EditUser = () => {
+  const navigation = useNavigation();
+  const [state, dispatch] = useContext(MyContext);
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState({
+    email: state.data.email,
+    first_name: state.data.first_name,
+    role: "PATIENT",
+    last_name: state.data.last_name,
+    patient: {
+      address: state.data.patient?.address,
+      blood_group: state.data.patient?.blood_group,
+      date_of_birth: state.data.patient?.date_of_birth,
+      gender: state.data.patient?.gender,
+      phone_number: state.data.patient?.phone_number,
+    },
+    username: state.data.username,
+  });
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
-  const today = new Date();
-  const startDate = getFormatedDate(
-    today.setDate(today.getDate() + 1),
-    "DD/MM/YYYY"
+
+  const [startedDate, setStartedDate] = useState(
+    getFormatedDate(new Date(), "DD/MM/YYYY")
   );
-  const [selectedStartDate, setSelectedStartDate] = useState("01/01/1990");
-  const [startedDate, setStartedDate] = useState("12/12/2023");
-
-  const handleChangeStartDate = (propDate) => {
-    setStartedDate(propDate);
-  };
-
   const handleOnPressStartDate = () => {
-    setOpenStartDatePicker(!openStartDatePicker);
+    setOpenStartDatePicker(true);
   };
-  
-  const handleImageSelection = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 4],
-      quality: 1,
-    });
-    console.log(result);
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
+  const handleChangeStartDate = (date) => {
+    const formattedDate = moment(date, "YYYY/MM/DD").format("YYYY-MM-DD");
+    change("patient.date_of_birth", formattedDate);
+    setOpenStartDatePicker(false);
+  };
+  const logout = () => {
+    dispatch({ type: "logout" });
+  };
+  const renderDatePicker = () => (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={openStartDatePicker}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <DatePicker
+            mode="calendar"
+            selected={user.patient.date_of_birth}
+            onDateChange={handleChangeStartDate}
+            options={{
+              backgroundColor: Colors.primary,
+              textHeaderColor: "#FFFFFF",
+              textDefaultColor: "#FFFFFF",
+              selectedTextColor: "#3d85c6",
+              mainColor: "#FFFFFF",
+              textSecondaryColor: "#FFFFFF",
+              borderColor: Colors.primary,
+            }}
+          />
+          <TouchableOpacity onPress={() => setOpenStartDatePicker(false)}>
+            <Text style={{ color: "white" }}>Lưu</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+  const change = (field, value) => {
+    if (field.startsWith("patient.")) {
+      const patientField = field.split(".")[1];
+      setUser((current) => ({
+        ...current,
+        patient: {
+          ...current.patient,
+          [patientField]: value,
+        },
+      }));
+    } else {
+      setUser((current) => ({ ...current, [field]: value }));
     }
   };
+  
+ const updateUserInformation = async () => {
+  try {
+    let form = new FormData();
+    for (const key in user) {
+      if (key === "patient") {
+        for (const patientKey in user.patient) {
+          form.append(`patient.${patientKey}`, user.patient[patientKey]);
+        }
+      } else {
+        form.append(key, user[key]);
+      }
+    }
 
-  function renderDatePicker() {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={openStartDatePicker}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <DatePicker
-              mode="calendar"
-              selected={startedDate}
-              onDateChanged={handleChangeStartDate}
-              onSelectedChange={(date) => setSelectedStartDate(date)}
-              options={{
-                backgroundColor: "#3d85c6",
-                textHeaderColor: "#FFFFFF",
-                textDefaultColor: "#FFFFFF",
-                selectedTextColor: "#3d85c6",
-                mainColor: "#FFFFFF",
-                textSecondaryColor: "#FFFFFF",
-                borderColor: "rgba(122, 146, 165, 0.1)",
-              }}
-            />
-            <TouchableOpacity onPress={handleOnPressStartDate}>
-              <Text style={{ color: "white" }}>Lưu</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    );
+    const access_token = await AsyncStorage.getItem('access_token');
+    const res = await authApi(access_token).patch(endpoints["updateInfor"], form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      }
+    });
+    logout();
+    console.info(res.data);
+  } catch (error) {
+    
+    if (error.response) {
+      
+      console.error("Server responded with status code:", error.response.status);
+      console.error("Response data:", error.response.data);
+    } else if (error.request) {
+      
+      console.error("No response received from server");
+    } else {
+     
+      console.error("Error setting up the request:", error.message);
+    }
+    console.error("Error details:", error.config);
+  } finally {
+    setLoading(false);
   }
+};
+ 
   return (
     <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          marginHorizontal: 12,
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      ></View>
-
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20 }}>
-        <View
-          style={{
-            alignItems: "center",
-            marginVertical: 22,
-          }}
-        >
-          {/* avatar */}
-
-          <TouchableOpacity onPress={handleImageSelection}>
+        <View style={{ alignItems: "center", marginVertical: 22 }}>
+          <TouchableOpacity>
             <Image
-              source={{ uri: selectedImage }}
+              source={{ uri: user.avatar || "hieu.jpg" }}
               style={{
                 height: 170,
                 width: 170,
@@ -128,67 +168,81 @@ const EditUser = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/* user infor */}
-
         <View style={{ marginVertical: 20 }}>
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.label}>Họ và tên</Text>
+            <Text style={styles.label}>First Name</Text>
             <View style={styles.inputContainer}>
-            <Icon
-                name="account-outline"
-                style={styles.icon}
-              />
+              <Icon name="account-outline" style={styles.icon} />
               <TextInput
                 style={styles.textInput}
-                value={name}
-                onChangeText={(value) => setName(value)}
+                value={user.first_name}
+                onChangeText={(value) => change("first_name", value)}
                 editable={true}
               />
             </View>
           </View>
+
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.label}>Last Name</Text>
+            <View style={styles.inputContainer}>
+              <Icon name="account-outline" style={styles.icon} />
+              <TextInput
+                style={styles.textInput}
+                value={user.last_name}
+                onChangeText={(value) => change("last_name", value)}
+                editable={true}
+              />
+            </View>
+          </View>
+
+         
+
 
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.label}>Email</Text>
             <View style={styles.inputContainer}>
-            <Icon
-                name="email-outline"
-                style={styles.icon}
-              />
+              <Icon name="email-outline" style={styles.icon} />
               <TextInput
                 style={styles.textInput}
-                value={email}
-                onChangeText={(value) => setEmail(value)}
+                value={user.email}
+                onChangeText={(value) => change("email", value)}
                 editable={true}
               />
             </View>
           </View>
-
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.label}>Mật khẩu</Text>           
+            <Text style={styles.label}>Số điện thoại</Text>
             <View style={styles.inputContainer}>
-            <Icon
-                name="lock-outline"
-                style={styles.icon}
-              />
+              <Icon name="phone-outline" style={styles.icon} />
               <TextInput
                 style={styles.textInput}
-                value={password}
-                onChangeText={(value) => setPassword(value)}
+                value={user.patient.phone_number}
+                onChangeText={(value) => change("patient.phone_number", value)}
                 editable={true}
+              />
+            </View>
+          </View>
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.label}>Mật khẩu</Text>
+            <View style={styles.inputContainer}>
+              <Icon name="lock-outline" style={styles.icon} />
+              <TextInput
+                style={styles.textInput}
+                value={user.password}
+                editable={false}
                 secureTextEntry
               />
             </View>
           </View>
 
           <View style={{ marginBottom: 20 }}>
-            <Text style={styles.label}>Ngày sinh</Text>          
+            <Text style={styles.label}>Ngày sinh</Text>
             <View style={styles.inputContainer}>
-            <Icon
-                name="calendar"
-                style={styles.icon}
-              />
+              <Icon name="calendar" style={styles.icon} />
               <TouchableOpacity onPress={handleOnPressStartDate}>
-                <Text style={styles.dateTextInput}>{selectedStartDate}</Text>
+                <Text style={styles.dateTextInput}>
+                  {user.patient.date_of_birth}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -196,24 +250,46 @@ const EditUser = ({ navigation }) => {
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.label}>Địa chỉ</Text>
             <View style={styles.inputContainer}>
-              <Icon
-                name="folder-home"
-                style={styles.icon}
-              />
+              <Icon name="folder-home" style={styles.icon} />
               <TextInput
                 style={styles.textInput}
-                value={country}
-                onChangeText={(value) => setCountry(value)}
+                value={user.patient.address}
+                onChangeText={(value) => change("patient.address", value)}
                 editable={true}
               />
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.button}>
+        <Text style={styles.label}>Nhóm máu</Text>
+        <Picker
+          selectedValue={user.patient.blood_group}
+          style={styles.picker}
+          onValueChange={(itemValue) =>
+            change("patient.blood_group", itemValue)
+          }
+        >
+          <Picker.Item label="A" value="A" />
+          <Picker.Item label="B" value="B" />
+          <Picker.Item label="AB" value="AB" />
+          <Picker.Item label="O" value="O" />
+        </Picker>
+        <Text style={styles.label}>Giới tính</Text>
+
+        <Picker
+          selectedValue={user.patient.gender}
+          style={styles.picker}
+          onValueChange={(itemValue) => change("patient.gender", itemValue)}
+        >
+          <Picker.Item label="Nam" value="male" />
+          <Picker.Item label="Nữ" value="female" />
+        </Picker>
+
+        <TouchableOpacity onPress={updateUserInformation}  style={styles.button}>
           <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>
             Lưu
           </Text>
         </TouchableOpacity>
+
         {renderDatePicker()}
       </ScrollView>
     </SafeAreaView>

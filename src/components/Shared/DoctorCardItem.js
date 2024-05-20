@@ -15,7 +15,6 @@ const DoctorCardItem = ({ doctor }) => {
   const navigation = useNavigation();
 
   return (
-    <ScrollView>
       <View
         style={{
           backgroundColor: Colors.white,
@@ -74,14 +73,16 @@ const DoctorCardItem = ({ doctor }) => {
                 marginTop: 3,
               }}
             >
-             Giá: {doctor.price}
+              Giá: {doctor.price}
             </Text>
           </View>
         </View>
-        <TouchableOpacity 
-          onPress={()=>navigation.navigate("BookAppointment",{
-            doctor:doctor
-        })}
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("BookAppointment", {
+              doctor: doctor,
+            })
+          }
           style={{
             marginTop: 10,
             padding: 10,
@@ -100,7 +101,6 @@ const DoctorCardItem = ({ doctor }) => {
           </Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
   );
 };
 

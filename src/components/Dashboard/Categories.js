@@ -17,7 +17,7 @@ const Categories = () => {
     try {
       const resp = await GlobalAPI.get(endpoints['categories']);
       if (resp && resp.data) {
-        setCategoryList(resp.data.results);
+        setCategoryList(resp.data);
       } else {
         console.error("Response data is undefined");
       }

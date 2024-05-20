@@ -13,12 +13,10 @@ const AppointmentDetail = () => {
 
 
   const handleConfirm = () => {
-    // Xử lý xác nhận cuộc hẹn (ví dụ: gửi y tá đến API để xác nhận)
     console.log("Confirmed appointment:");
   };
 const deleteAppointment = (id) => {
     GlobalAPI.deleteAppointments(id);
-    // Toast.show("Hủy lịch khám thành công !", Toast.LONG);
     navigation.goBack();
   };
   return (

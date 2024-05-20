@@ -2,7 +2,7 @@ import { View, Text, Image } from "react-native";
 import React from "react";
 import PageHeader from "../Shared/PageHeader";
 import Colors from "../../assets/color/Colors";
-import { Ionicons } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
 import HorizontalLine from "../Shared/HorizontalLine";
 const AppointmentDoctorInfo = ({ doctor }) => {
   return (
@@ -18,10 +18,10 @@ const AppointmentDoctorInfo = ({ doctor }) => {
         }}
       >
         <Image
-          source={{ uri: doctor.attributes.image.data[0].attributes.url }}
+          source={{ uri: doctor.user.avatar }}
           style={{ width: 100, height: 100, borderRadius: 100 }}
         />
-      <View>
+        <View>
           <Text
             style={{
               fontSize: 20,
@@ -29,7 +29,7 @@ const AppointmentDoctorInfo = ({ doctor }) => {
               marginBottom: 8,
             }}
           >
-            {doctor.attributes.Name}
+            {doctor.user.last_name}
           </Text>
           <View
             style={{
@@ -39,7 +39,7 @@ const AppointmentDoctorInfo = ({ doctor }) => {
               alignItems: "center",
             }}
           >
-            <Ionicons name="location" size={22} color={Colors.primary} />
+            <Fontisto name="email" size={22} color={Colors.primary} />
             <Text
               style={{
                 fontSize: 16,
@@ -48,7 +48,7 @@ const AppointmentDoctorInfo = ({ doctor }) => {
                 width: "70%",
               }}
             >
-              {doctor.attributes.Address}
+              {doctor.user.email}
             </Text>
           </View>
         </View>

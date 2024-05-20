@@ -1,123 +1,70 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import GlobalAPI from "../../services/GlobalAPI";
+import { FlatList, StyleSheet, View } from "react-native";
+import GlobalAPI, { authApi, endpoints } from "../../services/GlobalAPI";
 import { useNavigation } from "@react-navigation/native";
 import AppointmentList from "../../components/Nurse/AppointmentList";
 import SearchAppointmentList from "../../components/Nurse/SearchAppointmentList";
 import Colors from "../../assets/color/Colors";
 import PageHeader from "../../components/Shared/PageHeader";
 import { useFocusEffect } from '@react-navigation/native';
+import AppointmentCardItem from "../../components/Appointment/AppointmentCardItem";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ConfirmAppointmentScreen = ({ route }) => {
-  const [pendingAppointments, setPendingAppointments] = useState([]);
-  const navigation = useNavigation();
-  const [searchAppointment, setSearchAppointments] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [appointments, setAppointments] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const getPendingAppointments = () => {
-    GlobalAPI.getAppointmentsPending().then((resp) => {
-      setPendingAppointments(resp.data.data);
-      console.log("get pending appoinment")
-    });
-  };
+
   useEffect(() => {
-    getPendingAppointments();
+    const appointmentList = async () => {
+      try {
+        const accessToken = await AsyncStorage.getItem('access_token');
+        if (!accessToken) {
+          console.error('Access token not found in AsyncStorage');
+          return;
+        } 
+        
+        const response = await authApi(accessToken).get(endpoints.appointments);
+        setAppointments(response.data.results);
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
+    
+    appointmentList();
   }, []);
-
-  const handlePressItem = (item) => {
-    navigation.navigate("AppointmentDetail", { appointment: item });
-  };
-
-  const searchAppointments = async () => {
+  
+  const handleRefresh = async () => {
+    setRefreshing(true);
     try {
-      const response = await GlobalAPI.getAppointmentsPendingByParam(
-        searchTerm
-      );
-      setSearchAppointments(response.data.data);
+      const accessToken = await AsyncStorage.getItem('access_token');
+      if (!accessToken) {
+        console.error('Access token not found in AsyncStorage');
+        return;
+      }    
+      const response = await authApi(accessToken).get(endpoints.appointments);
+      setAppointments(response.data.results);
     } catch (error) {
-      console.error("Lỗi khi tìm kiếm ", error);
+      console.error('Error fetching appointments:', error);
+    } finally {
+      setRefreshing(false);
     }
   };
-  const handleRefresh = () => {
-    setRefreshing(true);
-    getPendingAppointments();
-    setRefreshing(false);
-    // Toast.show("Làm mới thành công !", Toast.LONG);
-  };
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (searchTerm) {
-        searchAppointments();
-      } else {
-        getPendingAppointments();
-      }
-    }, 500);
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm]);
-
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-  useFocusEffect(
-    React.useCallback(() => {
-      getPendingAppointments();
-    }, [])
-  );
 
   return (
-    pendingAppointments && (
-      <View style={styles.container}
-      >
-        <PageHeader title={"Lịch khám"} backButton={false} />
-        <AppointmentList
-          appointments={pendingAppointments}
-          onPressItem={handlePressItem}
-          toggleModal={toggleModal}
-          handleRefresh={handleRefresh}
-          refreshing={refreshing}
-        />
-        <SearchAppointmentList
-          visible={isModalVisible}
-          onClose={toggleModal}
-          searchAppointment={pendingAppointments}
-          searchTerm={searchTerm}
-          onSearchTermChange={setSearchTerm}
-          onPressItem={handlePressItem}
-        />
-      </View>
-    )
+    <View style={{ padding: 10 }}>
+      <FlatList
+        data={appointments}
+        showsVerticalScrollIndicator={false}
+        refreshing={refreshing}
+        onRefresh={handleRefresh}
+        renderItem={({ item }) => (
+          <AppointmentCardItem
+            appointment={item}
+            doctorID={item.doctor.id}
+          />
+        )}
+      />
+    </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    position: "relative",
-    backgroundColor: "white",
-  },
-  addButtonContainer: {
-    alignSelf: "flex-end",
-    marginBottom: 10,
-  },
-  addButton: {
-    padding: 10,
-    backgroundColor: Colors.SECONDARY,
-    borderRadius: 100,
-    marginRight: 4,
-  },
-  payButton: {
-    padding: 10,
-    backgroundColor: Colors.SECONDARY,
-    borderRadius: 10,
-  },
-  payButtonText: {
-    color: Colors.primary,
-    textAlign: "center",
-    fontFamily: "medium",
-    fontSize: 17,
-  },
-});
-
+}
 export default ConfirmAppointmentScreen;

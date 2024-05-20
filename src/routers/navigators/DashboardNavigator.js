@@ -34,6 +34,7 @@ const DashboardNavigator = () => {
         component={ListAllDoctor}
         options={{ headerShown: false }}
       />
+      
     </DashboardStack.Navigator>
   );
 };

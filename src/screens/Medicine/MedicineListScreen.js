@@ -16,7 +16,7 @@ const MedicineListScreen = () => {
     try {
       const resp = await GlobalAPI.get(endpoints['getAllMedicine']);
       if (resp && resp.data) {
-        setMedicines(resp.data.results);
+        setMedicines(resp.data);
       } else {
         console.error("Response data is undefined");
       }
@@ -73,7 +73,6 @@ const MedicineListScreen = () => {
 
   return (
     <View style={styles.container}>
-      <PageHeader title={"Đơn thuốc"} backButton={false} />
       <SelectedMedicinesList
         selectedMedicines={selectedMedicines}
         onRemoveMedicine={removeMedicine}
